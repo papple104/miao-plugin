@@ -59,6 +59,9 @@ function checkCharacter (e) {
   if (!char) {
     return false
   }
+  if (mode !== 'pic' && !char.isRelease && Common.isDisable(e, 'wiki.leak')) {
+    return false
+  }
   e.wikiMode = mode
   e.msg = '#喵喵WIKI'
   e.char = char
