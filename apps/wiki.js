@@ -70,6 +70,11 @@ async function wiki (e) {
   let mode = e.wikiMode
   let char = e.char
 
+  if (mode !== 'pic' && !char.isRelease) {
+    e.reply('角色尚未实装')
+    return true
+  }
+
   if (mode === 'pic') {
     let img = char.getCardImg(Cfg.get('char.se', false), false)
     if (img && img.img) {
