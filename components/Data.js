@@ -114,6 +114,23 @@ let Data = {
     }
   },
 
+  async importHelp (index) {
+    if (!index || index == 0) {
+      return await this.importCfg("help");
+    }
+    let sysCfg = await Data.importModule(`config/system/help_system.js`);
+    let diyCfg = await Data.importModule(`config/help${index}.js`);
+    if (diyCfg.isSys) {
+      console.error(`miao-plugin: config/help${index}.js无效，已忽略`)
+      console.error(`如需配置请复制config/help_default.js为config/help${index}.js，请勿复制config/system下的系统文件`)
+      diyCfg = {}
+    }
+    return {
+      sysCfg,
+      diyCfg
+    };
+  },
+
   /*
   * 返回一个从 target 中选中的属性的对象
   *

@@ -10,7 +10,7 @@ let app = App.init({
 })
 
 app.reg('help', help, {
-  rule: /^#?(喵喵)?(命令|帮助|菜单|help|说明|功能|指令|使用说明)$/,
+  rule: /^#?(喵喵)?(命令|帮助|菜单|help|说明|功能|指令|使用说明)(\d{1})?$/,
   desc: '【#帮助】 #喵喵帮助'
 })
 
@@ -39,7 +39,23 @@ async function help (e) {
     help = await import(`file://${helpPath}/help-list.js?version=${new Date().getTime()}`)
   }
 
-  let { diyCfg, sysCfg } = await Data.importCfg('help')
+  let helpNo = 0;
+  let multiHelp = false;
+  if (/\d{1}$/.test(e.msg)) {
+    helpNo = Number(/\d{1}$/.exec(e.msg));
+    if (helpNo != 0) {
+      multiHelp = true;
+    }
+  }
+
+  let { diyCfg, sysCfg } = await Data.importHelp(helpNo);
+
+  // let { diyCfg, sysCfg } = await Data.importCfg('help')
+
+  if (multiHelp && (!diyCfg.helpCfg || !diyCfg.helpList)) {
+    e.reply(`帮助${helpNo}尚未设置`);
+    return true;
+  }
 
   // 兼容一下旧字段
   if (lodash.isArray(help.helpCfg)) {
