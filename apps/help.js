@@ -10,7 +10,7 @@ let app = App.init({
 })
 
 app.reg('help', help, {
-  rule: /^#?(喵喵)?(命令|帮助|菜单|help|说明|功能|指令|使用说明)(\d{1})?$/,
+  rule: /^#?(喵喵)?(命令|帮助|菜单|help|说明|功能|指令|使用说明)([1-9][0-9]?)?$/,
   desc: '【#帮助】 #喵喵帮助'
 })
 
@@ -39,11 +39,11 @@ async function help (e) {
     help = await import(`file://${helpPath}/help-list.js?version=${new Date().getTime()}`)
   }
 
-  let helpNo = 0;
+  let helpNo = "0";
   let multiHelp = false;
-  if (/\d{1}$/.test(e.msg)) {
-    helpNo = Number(/\d{1}$/.exec(e.msg));
-    if (helpNo != 0) {
+  if (/[1-9][0-9]?$/.test(e.msg)) {
+    helpNo = /[1-9][0-9]?$/.exec(e.msg);
+    if (helpNo != "0") {
       multiHelp = true;
     }
   }
