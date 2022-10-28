@@ -12,6 +12,7 @@ export const helpCfg = {
   colWidth: 265,
   theme: 'all',
   themeExclude: ['default'],
+  group: 'all',
   style: {
     fontColor: '#ceb78b',
     descColor: '#eee',

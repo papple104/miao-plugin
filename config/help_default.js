@@ -34,6 +34,13 @@ export const helpCfg = {
   // 如希望default皮肤也加入随机池可删除default项
   themeExclude: ['default'],
 
+  // papple104:
+  // 指定本帮助生效的群，在help.js中，对所有群生效
+  // 只在带数字后缀的帮助配置，如help1.js中，本项生效
+  // group: 'all' // 设置为所有加入的群和私聊有效，不包括云崽设置的黑名单
+  // group: ['123456789'] // 设置为仅在指定群内有效，主人可私聊获取不受影响
+  group: 'all',
+
   // 是否启用背景毛玻璃效果，若渲染遇到问题可设置为false关闭
   bgBlur: true
 }

@@ -10,7 +10,7 @@ let app = App.init({
 })
 
 app.reg('help', help, {
-  rule: /^#?(喵喵)?(命令|帮助|菜单|help|说明|功能|指令|使用说明)([1-9][0-9]?)?$/,
+  rule: /^#?(喵喵)?(命令|帮助|菜单|help|说明|功能|指令|使用说明)([1-9][0-9]{0,8})?$/,
   desc: '【#帮助】 #喵喵帮助'
 })
 
@@ -41,8 +41,8 @@ async function help (e) {
 
   let helpNo = "0";
   let multiHelp = false;
-  if (/[1-9][0-9]?$/.test(e.msg)) {
-    helpNo = /[1-9][0-9]?$/.exec(e.msg);
+  if (/[1-9][0-9]{0,8}$/.test(e.msg)) {
+    helpNo = /[1-9][0-9]{0,8}$/.exec(e.msg);
     if (helpNo != "0") {
       multiHelp = true;
     }
@@ -52,10 +52,27 @@ async function help (e) {
 
   // let { diyCfg, sysCfg } = await Data.importCfg('help')
 
-  if (multiHelp && (!diyCfg.helpCfg || !diyCfg.helpList)) {
-    e.reply(`帮助${helpNo}尚未设置`);
-    return true;
+  if (multiHelp) {
+    if (!diyCfg.helpCfg || !diyCfg.helpList) {
+      e.reply(`帮助${helpNo}尚未设置`);
+      return true;
+    }
+    console.log("diyCfg.helpCfg.group", diyCfg.helpCfg.group);
+    if (e.isGroup) {
+      if (lodash.isArray(diyCfg.helpCfg.group)) {
+        if (!diyCfg.helpCfg.group.includes(e.group_id)) {
+          e.reply(`帮助${helpNo}在本群无效`);
+          return true;
+        }
+      }
+    } else {
+      if (!e.isMaster) {
+        e.reply(`帮助${helpNo}在本群无效`);
+        return true;
+      }
+    }
   }
+
 
   // 兼容一下旧字段
   if (lodash.isArray(help.helpCfg)) {
