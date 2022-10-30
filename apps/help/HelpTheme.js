@@ -34,9 +34,11 @@ let HelpTheme = {
   },
   async getThemeData (diyStyle, sysStyle) {
     let helpConfig = lodash.extend({}, sysStyle, diyStyle)
-    let colCount = Math.min(5, Math.max(parseInt(helpConfig?.colCount) || 3, 2))
-    let colWidth = Math.min(500, Math.max(100, parseInt(helpConfig?.colWidth) || 265))
-    let width = Math.min(2500, Math.max(800, colCount * colWidth + 30))
+    let colCount = Math.min(5, parseInt(helpConfig?.colCount))
+    let colWidthMax = Math.max(1000 / colCount, 500);
+    let colWidthMin = Math.max(530 / colCount, 265);
+    let colWidth = Math.min(colWidthMax, Math.max(100, parseInt(helpConfig?.colWidth) || colWidthMin))
+    let width = Math.min(2500, Math.max(560, colCount * colWidth + 30))
     let theme = await HelpTheme.getThemeCfg(diyStyle.theme || sysStyle.theme, diyStyle.themeExclude || sysStyle.themeExclude)
     let themeStyle = theme.style || {}
     let ret = [`

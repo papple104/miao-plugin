@@ -60,7 +60,7 @@ async function help (e) {
     console.log("diyCfg.helpCfg.group", diyCfg.helpCfg.group);
     if (e.isGroup) {
       if (lodash.isArray(diyCfg.helpCfg.group)) {
-        if (!diyCfg.helpCfg.group.includes(e.group_id)) {
+        if (!diyCfg.helpCfg.group.includes(e.group_id + "")) {
           e.reply(`帮助${helpNo}在本群无效`);
           return true;
         }
