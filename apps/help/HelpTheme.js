@@ -41,9 +41,10 @@ let HelpTheme = {
     let width = Math.min(2500, Math.max(560, colCount * colWidth + 30))
     let theme = await HelpTheme.getThemeCfg(diyStyle.theme || sysStyle.theme, diyStyle.themeExclude || sysStyle.themeExclude)
     let themeStyle = theme.style || {}
+    let cover = diyStyle.cover ? "background-size: cover;" : ""
     let ret = [`
     body{background-image:url(${theme.bg});width:${width}px;}
-    .container{background-image:url(${theme.main});width:${width}px;}
+    .container{background-image:url(${theme.main});${cover}width:${width}px;}
     .help-table .td,.help-table .th{width:${100 / colCount}%}
     `]
     let css = function (sel, css, key, def, fn) {

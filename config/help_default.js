@@ -42,7 +42,10 @@ export const helpCfg = {
   group: 'all',
 
   // 是否启用背景毛玻璃效果，若渲染遇到问题可设置为false关闭
-  bgBlur: true
+  bgBlur: true,
+
+  // 是否在背景图高度不足时，不填充bg.jpg，而继续缩放成将完全覆盖背景的最小大小
+  cover: false
 }
 
 // 帮助菜单内容
