@@ -20,6 +20,24 @@ export const details = [{
     const atk = calc(attr.atk)
     return basic(td[0] * atk / 100 + td[1] * em / 100, 'e')
   }
+}, {
+  title: '灭净三业蔓激化',
+  params: { e2: true, q: false },
+  dmg: ({ talent, calc, attr }, { basic }) => {
+    const td = talent.e['灭净三业伤害2']
+    const em = calc(attr.mastery)
+    const atk = calc(attr.atk)
+    return basic(td[0] * atk / 100 + td[1] * em / 100, 'e', 'spread')
+  }
+}, {
+  title: '开Q灭净三业蔓激化',
+  params: { e2: true },
+  dmg: ({ talent, calc, attr, cons }, { basic }) => {
+    const td = talent.e['灭净三业伤害2']
+    const em = calc(attr.mastery)
+    const atk = calc(attr.atk)
+    return basic(td[0] * atk / 100 + td[1] * em / 100, 'e', 'spread')
+  }
 }]
 
 export const mainAttr = 'atk,mastery,cpct,cdmg'
