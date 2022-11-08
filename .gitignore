@@ -13,4 +13,4 @@
 !/resources/help/theme/default
 /config/character.js
 /config/profile.js
-/config/help.js
+/config/help*.js
