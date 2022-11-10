@@ -9,8 +9,9 @@ export async function profileList (e) {
     return true
   }
   let rank = false
-  if (e.group_id) {
-    rank = await ProfileRank.create({ group: e.group_id, uid, qq: e.user_id })
+  let groupId = e.group_id
+  if (groupId) {
+    rank = await ProfileRank.create({ groupId, uid, qq: e.user_id })
   }
   let servName = Profile.getServName(uid)
   let hasNew = false
@@ -24,7 +25,8 @@ export async function profileList (e) {
     newChar = e.newChar
   }
   const cfg = await Data.importCfg('cfg')
-  const groupRank = cfg?.diyCfg?.groupRank || false
+  const groupRank = rank && (cfg?.diyCfg?.groupRank || false)
+  const rankCfg = await ProfileRank.getGroupCfg(groupId)
   await Profile.forEach(uid, async function (profile) {
     if (!profile.hasData) {
       return true
@@ -36,12 +38,12 @@ export async function profileList (e) {
     tmp.level = profile.level || 1
     tmp.cons = profile.cons
     tmp.isNew = 0
-    if (rank) {
-      tmp.groupRank = await rank.getRank(profile)
-    }
     if (newChar[char.name]) {
       tmp.isNew = 1
       newCount++
+    }
+    if (rank) {
+      tmp.groupRank = await rank.getRank(profile, !!tmp.isNew)
     }
     chars.push(tmp)
   })
@@ -71,6 +73,7 @@ export async function profileList (e) {
     servName,
     hasNew,
     msg,
-    groupRank
+    groupRank,
+    rankCfg
   }, { e, scale: 1.6 })
 }
