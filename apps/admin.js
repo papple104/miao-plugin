@@ -25,7 +25,7 @@ let app = App.init({
   desc: '喵喵设置'
 })
 
-let sysCfgReg = new RegExp(`^#喵喵设置\\s*(${lodash.keys(cfgMap).join('|')})?\\s*(.*)$`)
+let sysCfgReg = new RegExp(`^#喵喵设置\\s*(${keys.join('|')})?\\s*(.*)$`)
 
 app.reg('update-res', updateRes, {
   rule: /^#喵喵(强制)?(更新图像|图像更新)$/,
@@ -38,10 +38,6 @@ app.reg('update', updateMiaoPlugin, {
 app.reg('sys-cfg', sysCfg, {
   rule: sysCfgReg,
   desc: '【#管理】系统设置'
-})
-app.reg('profile-cfg', profileCfg, {
-  rule: /^#喵喵面板(?:设置)?.*/,
-  desc: '面板设置'
 })
 
 export default app
@@ -66,6 +62,7 @@ async function sysCfg (e) {
 
   let cfgReg = sysCfgReg
   let regRet = cfgReg.exec(e.msg)
+  let cfgSchemaMap = Cfg.getCfgSchemaMap()
 
   if (!regRet) {
     return true
@@ -75,47 +72,25 @@ async function sysCfg (e) {
     // 设置模式
     let val = regRet[2] || ''
 
-    let cfgKey = cfgMap[regRet[1]]
-    if (cfgKey === 'sys.scale') {
-      val = Math.min(200, Math.max(50, val * 1 || 100))
+    let cfgSchema = cfgSchemaMap[regRet[1]]
+    if (cfgSchema.input) {
+      val = cfgSchema.input(val)
     } else {
       val = !/关闭/.test(val)
     }
-
-    if (cfgKey) {
-      Cfg.set(cfgKey, val)
-    }
+    Cfg.set(cfgSchema.cfgKey, val)
   }
 
-  let cfg = {
-    chars: getStatus('char.char'),
-    profile: getStatus('char.profile'),
-    wife: getStatus('char.wife'),
-    poke: getStatus('char.poke'),
-    se: getStatus('char.se', false),
-    other: getStatus('char.queryOther'),
-    wiki: getStatus('wiki.wiki'),
-    pic: getStatus('wiki.pic'),
-    leak: getStatus('wiki.leak', false),
-    stat: getStatus('wiki.stat'),
-    abyss: getStatus('wiki.abyss', false),
-    imgPlus: fs.existsSync(plusPath),
-    help: getStatus('sys.help', false),
-    scale: Cfg.get('sys.scale', 100)
-  }
+  let schema = Cfg.getCfgSchema()
+  let cfg = Cfg.getCfg()
+  let imgPlus = fs.existsSync(plusPath)
 
   // 渲染图像
   return await Common.render('admin/index', {
-    ...cfg
+    schema,
+    cfg,
+    imgPlus
   }, { e, scale: 1.4 })
-}
-
-const getStatus = function (rote, def = true) {
-  if (Cfg.get(rote, def)) {
-    return '<div class="cfg-status" >已开启</div>'
-  } else {
-    return '<div class="cfg-status status-off">已关闭</div>'
-  }
 }
 
 async function updateRes (e) {
@@ -209,64 +184,4 @@ async function updateMiaoPlugin (e) {
     }, 1000)
   })
   return true
-}
-
-async function profileCfg (e) {
-  if (!await checkAuth(e)) {
-    return true
-  }
-
-  let keyMap = {
-    好友: 'friend',
-    群: 'group',
-    陌生人: 'stranger'
-  }
-
-  let regRet = /喵喵面板(?:设置)?\s*(好友|群|群聊|陌生人)?\s*(\d*)\s*(开启|关闭|删除)?\s*$/.exec(e.msg)
-
-  if (!regRet) {
-    return false
-  }
-
-  let [, target, groupId, actionType] = regRet
-  if (target === '群聊') {
-    target = '群'
-  }
-
-  if (target) {
-    if (groupId && (target === '群' || !target)) {
-      if (actionType === '删除') {
-        Cfg.del(`profile.groups.群${groupId}`)
-      } else {
-        Cfg.set(`profile.groups.群${groupId}.status`, actionType !== '关闭')
-      }
-    } else {
-      Cfg.set(`profile.${keyMap[target]}.status`, actionType !== '关闭')
-    }
-  }
-
-  let cfg = {
-    groups: []
-  }
-
-  lodash.forEach(['friend', 'group', 'stranger'], (key) => {
-    cfg[key] = getStatus(`profile.${key}.status`, true)
-  })
-
-  let groups = Cfg.get('profile.groups', {})
-  lodash.forEach(lodash.keys(groups), (group, idx) => {
-    if (lodash.isUndefined(groups[group])) {
-      return true
-    }
-    cfg.groups.push({
-      group,
-      idx: idx + 1,
-      status: getStatus(`profile.groups.${group}.status`, true)
-    })
-  })
-
-  // 渲染图像
-  return await Common.render('admin/profile', {
-    ...cfg
-  }, { e, scale: 1.4 })
 }

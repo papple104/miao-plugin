@@ -7,8 +7,7 @@ export async function groupRank (e) {
   if (!groupId) {
     return false
   }
-  const cfg = await Data.importCfg('cfg')
-  const groupRank = cfg?.diyCfg?.groupRank || false
+  const groupRank = Common.cfg('groupRank')
   let msg = e.original_msg || e.msg
   let type = ''
   if (/(排名|排行|列表)/.test(msg)) {
@@ -36,14 +35,23 @@ export async function groupRank (e) {
       return await renderProfile(e, char)
     } else {
       if (mode === 'dmg' && !ProfileDmg.dmgRulePath(char.name)) {
-        e.reply(`${char.name}暂不支持伤害计算..`)
+        e.reply(`暂无排名：${char.name}暂不支持伤害计算，无法进行排名..`)
       } else {
-        e.reply('暂无排名信息')
+        e.reply('暂无排名：请通过【#面板】查看角色面板以更新排名信息...')
       }
     }
   } else if (type === 'list') {
-    let uids = await ProfileRank.getGroupUidList(groupId, char.id, mode)
-    return renderCharRankList({ e, uids, char, mode })
+    if (mode === 'dmg' && !ProfileDmg.dmgRulePath(char.name)) {
+      e.reply(`暂无排名：${char.name}暂不支持伤害计算，无法进行排名..`)
+    } else {
+      let uids = await ProfileRank.getGroupUidList(groupId, char.id, mode)
+      if (uids.length > 0) {
+        return renderCharRankList({ e, uids, char, mode, groupId })
+      } else {
+        e.reply('暂无排名：请通过【#面板】查看角色面板以更新排名信息...')
+      }
+    }
+    return true
   }
 }
 
@@ -73,23 +81,32 @@ export async function resetRank (e) {
   e.reply(`本群${charName}排名已重置...`)
 }
 
-async function renderCharRankList ({ e, uids, char, mode }) {
+async function renderCharRankList ({ e, uids, char, mode, groupId }) {
   let list = []
+
   for (let ds of uids) {
     let uid = ds.value
     let profile = Profile.get(uid, char.id)
     if (profile) {
-      let mark = profile.getArtisMark(false)
+      let profileRank = await ProfileRank.create({ groupId, uid })
+      let data = await profileRank.getRank(profile, true)
+      let mark = data?.mark?.data
       let avatar = new Avatar(profile, uid)
       let tmp = {
         uid,
         ...avatar.getData('id,star,name,sName,level,fetter,cons,weapon,elem,talent,artisSet,imgs'),
         artisMark: Data.getData(mark, 'mark,markClass')
       }
-      let dmg = await profile.calcDmg({ mode: 'single' })
+      let dmg = data?.dmg?.data
       if (dmg && dmg.avg) {
+        let title = dmg.title
+        // 稍微缩短下title
+        if (title.length > 10) {
+          title = title.replace(/[ ·]*/g, '')
+        }
+        title = title.length > 10 ? title.replace(/伤害$/, '') : title
         tmp.dmg = {
-          title: dmg.title,
+          title: title,
           avg: Format.comma(dmg.avg, 1)
         }
       }
@@ -97,6 +114,7 @@ async function renderCharRankList ({ e, uids, char, mode }) {
     }
   }
   let title = `#${char.name}${mode === 'mark' ? '圣遗物' : ''}排行`
+  const rankCfg = await ProfileRank.getGroupCfg(groupId)
   // 渲染图像
   return await Common.render('character/rank-profile-list', {
     save_id: char.id,
@@ -104,6 +122,7 @@ async function renderCharRankList ({ e, uids, char, mode }) {
     title,
     elem: char.elem,
     bodyClass: `char-${char.name}`,
+    rankCfg,
     mode
   }, { e, scale: 1.4 })
 }
