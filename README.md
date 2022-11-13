@@ -12,7 +12,13 @@
 * 帮助配置文件配置项：group(指定有效的群)、colCount(可设置每行一列)、cover（背景图大小）
     * 设置group字段后，仅能在设置的群内可以使用对应编号的帮助，主人私聊不受此限，具体说明详见config/help_default.js中group字段注释
     * colCount设置为1有效，仅在colCount==1时，可以设置更大的列宽
-    * cover为true时，会保持图像的纵横比并将图像缩放成将完全覆盖背景的最小大小
+    * cover为true时，会保持图像的纵横比并将图像缩放成将完全覆盖背景的最小大小（与椰羊帮助类似，无需bg.jpg填充空白区域）
+
+使用该Fork版本
+
+```
+git clone https://gitee.com/papple104/miao-plugin.git ./plugins/miao-plugin/
+```
 
 以下为原README内容：
 
