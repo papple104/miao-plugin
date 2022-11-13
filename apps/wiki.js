@@ -55,7 +55,7 @@ function checkCharacter (e) {
   if (!char) {
     return false
   }
-  if (mode !== 'pic' && !char.isRelease && Common.isDisable(e, 'wiki.leak')) {
+  if (mode !== 'pic' && !char.isRelease && !Common.cfg(e, 'charWikiLeak')) {
     return false
   }
   e.wikiMode = mode
@@ -68,10 +68,10 @@ async function wiki (e) {
   let mode = e.wikiMode
   let char = e.char
 
-  if (mode !== 'pic' && !char.isRelease) {
-    e.reply('角色尚未实装')
-    return true
-  }
+  // if (mode !== 'pic' && !char.isRelease) {
+  //   e.reply('角色尚未实装')
+  //   return true
+  // }
 
   if (mode === 'pic') {
     let img = char.getCardImg(Cfg.get('charPicSe', false), false)

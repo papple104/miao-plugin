@@ -61,6 +61,14 @@ export const cfgSchema = {
         showDesc: false,
         desc: '#刻晴天赋/#刻晴命座 的天赋信息'
       },
+      charWikiLeak: {
+        title: '角色图鉴-未实装',
+        key: '未实装',
+        def: false,
+        oldCfgKey: 'wiki.leak',
+        showDesc: true,
+        desc: '开启后才会显示未实装角色的图鉴信息，仅供参考，请以游戏内实装为准'
+      },
       charPic: {
         title: '角色图片',
         key: '图片',

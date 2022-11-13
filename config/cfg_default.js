@@ -24,6 +24,9 @@ export const charWiki = true
 // #刻晴天赋/#刻晴命座 的天赋信息
 export const charWikiTalent = true
 
+// 以上信息(图鉴天赋命座)是否对未实装角色支持
+export const charWikiLeak = false
+
 // 角色图片
 export const charPic = true
 

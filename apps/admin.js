@@ -4,21 +4,7 @@ import { exec } from 'child_process'
 import { Cfg, Common, Data, App } from '../components/index.js'
 import { MysApi } from '../models/index.js'
 
-let cfgMap = {
-  角色: 'char.char',
-  面板: 'char.profile',
-  老婆: 'char.wife',
-  戳一戳: 'char.poke',
-  小清新: 'char.se',
-  查他人: 'char.queryOther',
-  图鉴: 'wiki.wiki',
-  图片: 'wiki.pic',
-  未实装: 'wiki.leak',
-  统计: 'wiki.stat',
-  深渊: 'wiki.abyss',
-  渲染: 'sys.scale',
-  帮助: 'sys.help'
-}
+let keys = lodash.map(Cfg.getCfgSchemaMap(), (i) => i.key)
 let app = App.init({
   id: 'admin',
   name: '喵喵设置',
