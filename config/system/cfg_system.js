@@ -22,6 +22,13 @@ export const cfgSchema = {
         def: false,
         desc: '群内的面板伤害及圣遗物排名与查看功能，默认关闭。请根据群友心理素质自行决定是否开启'
       },
+      groupRankLimit: {
+        title: '排名限制',
+        key: '限制',
+        def: 1,
+        type: 'num',
+        desc: '参与排名的限制条件：1:无限制 2:有CK 3:有16个角色或有CK 4:有御三家(安柏&凯亚&丽莎)或有CK 5:有16个角色+御三家或有CK。 若改变设置请根据情况决定是否需要【#重置排名】'
+      },
       uploadAbyssData: {
         title: '上传深渊',
         key: '深渊',

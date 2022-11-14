@@ -1,15 +1,22 @@
 import lodash from 'lodash'
 import moment from 'moment'
+import { Common } from '../components/index.js'
 
 export default class ProfileRank {
   constructor (data) {
-    this.groupId = data.groupId || data.groupId
+    this.groupId = data.groupId || data.groupId || ''
+    if (!this.groupId || this.groupId === 'undefined') {
+      return false
+    }
     this.qq = data.qq
     this.uid = data.uid + ''
+    this.allowRank = false
   }
 
   static async create (data) {
-    return new ProfileRank(data)
+    let rank = new ProfileRank(data)
+    rank.allowRank = await ProfileRank.checkRankLimit(rank.uid)
+    return rank
   }
 
   key (profile, type) {
@@ -23,14 +30,14 @@ export default class ProfileRank {
    * @returns {Promise<{}|boolean>}
    */
   async getRank (profile, force = false) {
-    if (!profile.hasData) {
+    if (!this.groupId || !this.allowRank || !profile.hasData) {
       return false
     }
     let ret = {}
     for (let typeKey of ['mark', 'dmg']) {
       let typeRank = await this.getTypeRank(profile, typeKey, force)
       ret[typeKey] = typeRank
-      if (!ret.rank || ret.rank <= typeRank.rank) {
+      if (!ret.rank || ret.rank >= typeRank.rank) {
         ret.rank = typeRank.rank
         ret.rankType = typeKey
       }
@@ -56,11 +63,14 @@ export default class ProfileRank {
         value = await this.getTypeValue(profile, type)
       }
     }
-    if (value && value.score) {
+    if (value && !lodash.isUndefined(value.score)) {
       await redis.zAdd(typeKey, { score: value.score, value: this.uid })
     }
     if (!lodash.isNumber(rank)) {
       rank = await redis.zRevRank(typeKey, this.uid)
+    }
+    if (rank === null) {
+      rank = 99
     }
     if (force) {
       return {
@@ -142,6 +152,14 @@ export default class ProfileRank {
   }
 
   static async getGroupCfg (groupId) {
+    const rankLimitTxt = {
+      1: '无限制',
+      2: '绑定有CK的用户',
+      3: '绑定CK，或列表有16个角色数据',
+      4: '绑定CK，或列表有安柏&凯亚&丽莎的数据',
+      5: '绑定CK，或列表有16个角色数据且包含安柏&凯亚&丽莎'
+    }
+    let rankLimit = Common.cfg('groupRankLimit') * 1 || 1
     let ret = {
       timestamp: (new Date()) * 1,
       status: 0
@@ -155,7 +173,78 @@ export default class ProfileRank {
       }
     } catch (e) {
     }
+    ret.limitTxt = rankLimitTxt[rankLimit]
     ret.time = moment(new Date(ret.timestamp)).format('MM-DD HH:mm')
     return ret
+  }
+
+  static async setRankLimit (uid, profiles, isSelfUid = false) {
+    if (!uid) {
+      return false
+    }
+    let basicCount = 0
+    let totalCount = 0
+    for (let charId in profiles) {
+      let profile = profiles[charId]
+      if (!profile || !profile.hasData) {
+        continue
+      }
+      if (['安柏', '凯亚', '丽莎'].includes(profile.name)) {
+        basicCount++
+      }
+      totalCount++
+    }
+    let data = {}
+    try {
+      let uData = await redis.get(`miao:rank:uid-info:${uid}`)
+      if (uData) {
+        data = JSON.parse(uData)
+      }
+    } catch (e) {
+      data = {}
+    }
+    await redis.set(`miao:rank:uid-info:${uid}`, JSON.stringify({
+      totalCount,
+      basicCount,
+      isSelfUid: !!(isSelfUid || data?.isSelfUid)
+    }), { EX: 3600 * 24 * 365 })
+  }
+
+  /**
+   * 1: '无限制',
+   * 2: '绑定有CK的用户',
+   * 3: '面板列表有16个角色数据，或绑定CK',
+   * 4: '面板列表有安柏&凯亚&丽莎的数据，或绑定CK',
+   * 5: '面板列表有16个角色数据且包含安柏&凯亚&丽莎，或绑定CK'
+   * @param uid
+   * @returns {Promise<boolean>}
+   */
+  static async checkRankLimit (uid) {
+    if (!uid) {
+      return false
+    }
+    try {
+      let rankLimit = Common.cfg('groupRankLimit') * 1 || 1
+      if (rankLimit === 1) {
+        return true
+      }
+      let data = await redis.get(`miao:rank:uid-info:${uid}`)
+      data = JSON.parse(data)
+      if (data.isSelfUid) {
+        return true
+      }
+      if (rankLimit === 2) {
+        return false
+      }
+      if ((data.totalCount || 0) < 16 && [3, 5].includes(rankLimit)) {
+        return false
+      }
+      if ((data.basicCount || 0) < 3 && [4, 5].includes(rankLimit)) {
+        return false
+      }
+      return true
+    } catch (e) {
+      return false
+    }
   }
 }
