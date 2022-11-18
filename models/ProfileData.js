@@ -92,19 +92,11 @@ export default class ProfileData extends Base {
   }
 
   get costume () {
-    let cMap = [
-      10000022, // 温迪
-      10000030, // 钟离
-      10000052, // 雷神
-      10000073 // 纳西妲
-    ]
     let talent = this.talent ? lodash.map(this.talent, (ds) => ds.original).join('') : ''
-    if (cMap.includes(this.id)) {
-      if (this.cons === 6 || ['ACE', 'ACE²'].includes(this.artis?.markClass) || talent === '101010') {
-        return 'super'
-      }
+    if (this.cons === 6 || ['ACE', 'ACE²'].includes(this.artis?.markClass) || talent === '101010') {
+      return [this._costume, 'super']
     }
-    return this._costume
+    return [this._costume, 'normal']
   }
 
   // toJSON 供保存使用

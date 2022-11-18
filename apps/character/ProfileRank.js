@@ -1,6 +1,7 @@
 import { Character, ProfileRank, ProfileDmg, Avatar } from '../../models/index.js'
 import { renderProfile } from './ProfileDetail.js'
 import { Data, Profile, Common, Format } from '../../components/index.js'
+import lodash from 'lodash'
 
 export async function groupRank (e) {
   let groupId = e.group_id
@@ -21,7 +22,7 @@ export async function groupRank (e) {
   let mode = /(分|圣遗物|评分|ACE)/.test(msg) ? 'mark' : 'dmg'
   let name = msg.replace(/(#|最强|最高分|第一|最高|最牛|圣遗物|评分|群内|群|排名|排行|面板|面版|详情|榜)/g, '')
   let char = Character.get(name)
-  if (!char) {
+  if (!char && type !== 'list') {
     return false
   }
   if (!groupRank) {
@@ -41,10 +42,15 @@ export async function groupRank (e) {
       }
     }
   } else if (type === 'list') {
-    if (mode === 'dmg' && !ProfileDmg.dmgRulePath(char.name)) {
+    if (mode === 'dmg' && char && !ProfileDmg.dmgRulePath(char.name)) {
       e.reply(`暂无排名：${char.name}暂不支持伤害计算，无法进行排名..`)
     } else {
-      let uids = await ProfileRank.getGroupUidList(groupId, char.id, mode)
+      let uids = []
+      if (char) {
+        uids = await ProfileRank.getGroupUidList(groupId, char ? char.id : '', mode)
+      } else {
+        uids = await ProfileRank.getGroupMaxUidList(groupId, mode)
+      }
       if (uids.length > 0) {
         return renderCharRankList({ e, uids, char, mode, groupId })
       } else {
@@ -81,12 +87,50 @@ export async function resetRank (e) {
   e.reply(`本群${charName}排名已重置...`)
 }
 
+/**
+ * 刷新群排名信息
+ * @param e
+ * @returns {Promise<boolean>}
+ */
+export async function refreshRank (e) {
+  let groupId = e.group_id
+  if (!groupId) {
+    return true
+  }
+  if (!e.isMaster) {
+    e.reply('只有管理员可刷新排名...')
+    return true
+  }
+  e.reply('面板数据刷新中，等待时间可能较长，请耐心等待...')
+  let groupUids = await Common.getGroupUids(e)
+  let count = 0
+  for (let qq in groupUids) {
+    for (let { uid, type } of groupUids[qq]) {
+      let profiles = Profile.getAll(uid)
+      // 刷新rankLimit
+      await ProfileRank.setUidInfo({ uid, profiles, qq, uidType: type })
+      let rank = await ProfileRank.create({ groupId, uid, qq })
+      for (let id in profiles) {
+        let profile = profiles[id]
+        if (!profile.hasData) {
+          continue
+        }
+        await rank.getRank(profile, true)
+      }
+      if (rank.allowRank) {
+        count++
+      }
+    }
+  }
+  e.reply(`本群排名已刷新，共刷新${count}个UID数据...`)
+}
+
 async function renderCharRankList ({ e, uids, char, mode, groupId }) {
   let list = []
-
   for (let ds of uids) {
-    let uid = ds.value
-    let profile = Profile.get(uid, char.id)
+    let uid = ds.uid || ds.value
+    let profile = Profile.get(uid, ds.charId || char.id)
+
     if (profile) {
       let profileRank = await ProfileRank.create({ groupId, uid })
       let data = await profileRank.getRank(profile, true)
@@ -94,6 +138,7 @@ async function renderCharRankList ({ e, uids, char, mode, groupId }) {
       let avatar = new Avatar(profile, uid)
       let tmp = {
         uid,
+        isMax: !char,
         ...avatar.getData('id,star,name,sName,level,fetter,cons,weapon,elem,talent,artisSet,imgs'),
         artisMark: Data.getData(mark, 'mark,markClass')
       }
@@ -110,10 +155,31 @@ async function renderCharRankList ({ e, uids, char, mode, groupId }) {
           avg: Format.comma(dmg.avg, 1)
         }
       }
+      if (uid) {
+        let userInfo = await ProfileRank.getUidInfo(uid)
+        if (userInfo && userInfo.qq) {
+          let member = e.group?.pickMember(userInfo.qq * 1)
+          let img = member?.getAvatarUrl(140)
+          if (img) {
+            tmp.qqFace = img
+          }
+        }
+      }
+      tmp._mark = mark?.mark || 0
+      tmp._dmg = dmg?.avg || 0
+      tmp._star = 5 - tmp.star
       list.push(tmp)
     }
   }
-  let title = `#${char.name}${mode === 'mark' ? '圣遗物' : ''}排行`
+  let title
+  if (char) {
+    title = `#${char.name}${mode === 'mark' ? '圣遗物' : ''}排行`
+    list = lodash.sortBy(list, mode === 'mark' ? '_mark' : '_dmg').reverse()
+  } else {
+    title = `#${mode === 'mark' ? '最高分' : '最强'}排行`
+    list = lodash.sortBy(list, ['uid', '_star', 'id'])
+  }
+
   const rankCfg = await ProfileRank.getGroupCfg(groupId)
   // 渲染图像
   return await Common.render('character/rank-profile-list', {

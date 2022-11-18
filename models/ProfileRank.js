@@ -118,6 +118,25 @@ export default class ProfileRank {
     return uids ? uids[0] : false
   }
 
+  static async getGroupMaxUidList (groupId, type = 'mark') {
+    let keys = await redis.keys(`miao:rank:${groupId}:${type}:*`)
+    let ret = []
+    for (let key of keys) {
+      let keyRet = /^miao:rank:\d+:(?:mark|dmg):(\d{8})$/.exec(key)
+      if (keyRet && keyRet[1]) {
+        let charId = keyRet[1]
+        let uid = await ProfileRank.getGroupMaxUid(groupId, charId, type)
+        if (uid) {
+          ret.push({
+            uid,
+            charId
+          })
+        }
+      }
+    }
+    return ret
+  }
+
   /**
    * 获取排行榜
    * @param groupId
@@ -136,7 +155,7 @@ export default class ProfileRank {
    * @param charId
    * @returns {Promise<void>}
    */
-  static async resetRank (groupId, charId = '') {
+  static async resetRank (groupId, groupMemList, charId = '') {
     let keys = await redis.keys(`miao:rank:${groupId}:*`)
     for (let key of keys) {
       let charRet = /^miao:rank:\d+:(?:mark|dmg):(\d{8})$/.exec(key)
@@ -178,7 +197,7 @@ export default class ProfileRank {
     return ret
   }
 
-  static async setRankLimit (uid, profiles, isSelfUid = false) {
+  static async setUidInfo ({ uid, qq, profiles, uidType = 'bind' }) {
     if (!uid) {
       return false
     }
@@ -203,11 +222,34 @@ export default class ProfileRank {
     } catch (e) {
       data = {}
     }
-    await redis.set(`miao:rank:uid-info:${uid}`, JSON.stringify({
-      totalCount,
-      basicCount,
-      isSelfUid: !!(isSelfUid || data?.isSelfUid)
-    }), { EX: 3600 * 24 * 365 })
+    data.totalCount = totalCount
+    data.basicCount = basicCount
+    if (data.isSelfUid) {
+      delete data.isSelfUid
+      data.uidType = 'ck'
+    }
+
+    if (uidType === 'ck') {
+      data.uidType = 'ck'
+      data.qq = qq || data.qq || ''
+    } else {
+      data.uidType = data.uidType || 'bind'
+      if (data.uidType === 'bind') {
+        data.qq = data.qq || qq || ''
+      } else {
+        data.qq = qq || data.qq || ''
+      }
+    }
+    await redis.set(`miao:rank:uid-info:${uid}`, JSON.stringify(data), { EX: 3600 * 24 * 365 })
+  }
+
+  static async getUidInfo (uid) {
+    try {
+      let data = await redis.get(`miao:rank:uid-info:${uid}`)
+      return JSON.parse(data)
+    } catch (e) {
+    }
+    return false
   }
 
   /**
@@ -230,7 +272,7 @@ export default class ProfileRank {
       }
       let data = await redis.get(`miao:rank:uid-info:${uid}`)
       data = JSON.parse(data)
-      if (data.isSelfUid) {
+      if (data.isSelfUid || data.uidType === 'ck') {
         return true
       }
       if (rankLimit === 2) {
