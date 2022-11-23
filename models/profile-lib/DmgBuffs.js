@@ -3,6 +3,7 @@
 * */
 import lodash from 'lodash'
 import { Data } from '../../components/index.js'
+import { ProfileArtis } from '../index.js'
 
 let weaponBuffs = {}
 let artisBuffs = {}
@@ -16,17 +17,15 @@ setTimeout(async function init () {
 let DmgBuffs = {
   // 圣遗物Buff
   getArtisBuffs (artis = {}) {
-    if (!artis) {
-      return []
-    }
     let buffs = artisBuffs
     let retBuffs = []
-    lodash.forEach(artis, (v, k) => {
-      if (buffs[k + v]) {
-        retBuffs.push(buffs[k + v])
-      }
-      if (v >= 4 && buffs[k + '2']) {
-        retBuffs.push(buffs[k + '2'])
+    ProfileArtis._eachArtisSet(artis, (sets, num) => {
+      let buff = buffs[sets.name] && buffs[sets.name][num]
+      if (buff && !buff.isStatic) {
+        retBuffs.push({
+          ...buff,
+          title: `${sets.name}${num}：` + buff.title
+        })
       }
     })
     return retBuffs
@@ -39,6 +38,9 @@ let DmgBuffs = {
       weaponCfg = [weaponCfg]
     }
     lodash.forEach(weaponCfg, (ds) => {
+      if (ds.isStatic) {
+        return true
+      }
       if (!/：/.test(ds.title)) {
         ds.title = `${weaponName}：${ds.title}`
       }
@@ -61,13 +63,24 @@ let DmgBuffs = {
       melt: '融化',
       swirl: '扩散'
     }
+    let mKey2 = {
+      aggravate: '超激化'
+    }
     lodash.forEach(buffs, (buff, idx) => {
-      if (lodash.isString(buff) && mKey[buff]) {
-        buff = {
-          title: `元素精通：${mKey[buff]}伤害提高[${buff}]%`,
-          mastery: buff
+      if (lodash.isString(buff)) {
+        if (mKey[buff]) {
+          buff = {
+            title: `元素精通：${mKey[buff]}伤害提高[${buff}]%`,
+            mastery: buff
+          }
+          buffs[idx] = buff
+        } else if (mKey2[buff]) {
+          buff = {
+            title: `元素精通：触发${mKey2[buff]}伤害值提高[${buff}]`,
+            mastery: buff
+          }
+          buffs[idx] = buff
         }
-        buffs[idx] = buff
       }
       buff.sort = lodash.isUndefined(buff.sort) ? 1 : buff.sort
     })

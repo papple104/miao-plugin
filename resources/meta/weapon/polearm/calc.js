@@ -1,4 +1,4 @@
-export default function (step) {
+export default function (step, staticStep) {
   return {
     白缨枪: {
       title: '白缨枪普通攻击伤害提高[aDmg]%',
@@ -75,15 +75,15 @@ export default function (step) {
         shield: step(20)
       }
     }],
-    和璞鸢: {
+    和璞鸢: [staticStep(), {
       title: '满层攻击力提高[atkPct]%，伤害提升[dmg]%',
       refine: {
         atkPct: [3.2 * 7, 3.9 * 7, 4.6 * 7, 5.3 * 7, 6 * 7],
         dmg: step(12),
         phy: step(12)
       }
-    },
-    护摩之杖: {
+    }],
+    护摩之杖: [staticStep('hpPct', 20), {
       title: '角色生命低于50%时额外获得[atkPlus]攻击力',
       data: {
         atkPlus: ({ attr, refine, calc }) => {
@@ -91,7 +91,8 @@ export default function (step) {
           return totalHp * ([0.8, 1, 1.2, 1.4, 1.6][refine] + [1, 1.2, 1.4, 1.6, 1.8][refine]) / 100
         }
       }
-    },
+    }],
+    天空之脊: staticStep('cpct', 8),
     薙草之稻光: [{
       title: '元素爆发12秒内元素充能提高[rechargePlus]%',
       sort: 0,
@@ -122,7 +123,8 @@ export default function (step) {
       }
     },
     赤沙之杖: {
-      title: '赤沙之杖被动：基于元素精通获得攻击力[_atk1]，5层Buff提高攻击力[_atk2]',
+      title: '赤沙之杖被动：基于元素精通获得攻击力[_atk1]，3层Buff提高攻击力[_atk2]',
+      sort: 7,
       data: {
         _atk1: ({ attr, calc, refine }) => step(52)[refine] * calc(attr.mastery) / 100,
         _atk2: ({ attr, calc, refine }) => step(28 * 3)[refine] * calc(attr.mastery) / 100,

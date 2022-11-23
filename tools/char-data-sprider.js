@@ -71,6 +71,7 @@ let getCharData = async function (id, key, name = '', _id = id) {
   }
 
   let details = []
+  let metas = []
   let talentElem = {}
   let talentId
   let talentKey
@@ -78,7 +79,7 @@ let getCharData = async function (id, key, name = '', _id = id) {
     talentKey = {}
     talentId = {}
     for (let idx in tElems) {
-      let detail = CharData.getDetail($, id, name, idx * 1 + 1, tElems[idx])
+      let detail = CharData.getDetail({ $, id, name, setIdx: idx * 1 + 1, elem: tElems[idx] })
       detail.attr = attr
       detail.elem = tElems[idx]
       details.push(detail)
@@ -100,27 +101,24 @@ let getCharData = async function (id, key, name = '', _id = id) {
       })
     }
   } else {
-    details.push(CharData.getDetail($, id, name))
+    let detail = CharData.getDetail({ $, id, name })
+    details.push(detail)
     talentId = tId[(10000000 + id * 1)]?.ProudMap || {}
   }
   let detail = details[0]
   let { talent, cons } = detail
-  // data.talent = lodash.mapValues(talent, (t) => t.name)
   data.talentKey = talentKey || lodash.invert(lodash.mapValues(talent, (t) => t.id))
   data.talentId = talentId
   if (data.elem === 'multi') {
     data.talentElem = talentElem
   }
   data.talentCons = CharData.getConsTalent(talent, cons)
-  /*
-  data.passive = lodash.map(passive, (t) => t.name)
-  data.cons = lodash.map(cons, (t) => t.name)
-   */
   data.materials = CharData.getMaterials($, mData)
   CharData.getImgs($)
   return {
     data,
     details,
+    metas,
     imgs
   }
 }
@@ -167,7 +165,7 @@ async function saveCharData (id, key, name = '', force = false, _id = id) {
   } else if (data.id === 20000000) {
     for (let idx in details) {
       let detail = details[idx]
-      fs.writeFileSync(`${charPath}/${detail.elem}/detail.json`, JSON.stringify(detail, '', 2))
+      fs.writeFileSync(`${charPath}/${detail.elem}/detail.json`, JSON.stringify(detail, '', 2).replaceAll('\n', '\r\n'))
     }
   }
 
@@ -265,4 +263,4 @@ let eta = {
   流浪者: '2022-12-07 11:00:00',
   珐露珊: '2022-12-07 11:00:00'
 }
-await down('75,76', true)
+await down('42', true)

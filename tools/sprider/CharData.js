@@ -80,9 +80,6 @@ const CharData = {
     let lvs = []
     let lvStat = {}
     stat.find('tr:gt(0)').each(function (i) {
-      if (i === 3 || i === 4) {
-        return
-      }
       let tr = $(this)
       let lvl = tr.find('td:first').text()
       lvs.push(lvl)
@@ -91,7 +88,7 @@ const CharData = {
         if (!colIdxs[i]) {
           return
         }
-        data.push($(this).text())
+        data.push((lodash.trim($(this).text(), '%') * 1) || 0)
       })
       lvStat[lvl] = data
     })
@@ -101,11 +98,12 @@ const CharData = {
     }
   },
 
-  getDetail ($, id, name, setIdx = '', elem = '') {
+  getDetail ({ $, id, name, setIdx = '', elem = '' }) {
     let cont = setIdx ? $(`#skillset_${setIdx}`) : $('#char_skills')
     cont.imgs = $.imgs
     let iconPath = elem ? `${elem}/icons` : 'icons'
     let talent = CharData.getTalents($, cont, name, iconPath)
+    let talentData = CharData.getTalentData(talent)
     let passive = CharData.getPassive($, cont, name, iconPath)
     let cons = CharData.getCons($, cont, iconPath)
     let attr = CharData.getDetailAttr($)
@@ -113,6 +111,7 @@ const CharData = {
       id,
       name,
       talent,
+      talentData,
       cons,
       passive,
       attr
@@ -210,13 +209,19 @@ const CharData = {
           }
         }
       })
-
-      details.push({
+      let detail = {
         name,
         unit,
         isSame,
         values: unit ? values2 : values
-      })
+      }
+      if (unit === '1名角色') {
+        detail.name2 = name.replace('：', '1')
+      } else if (unit === '2名角色') {
+        detail.name2 = name.replace('：', '2')
+      }
+
+      details.push(detail)
     })
 
     return {
@@ -359,6 +364,54 @@ const CharData = {
           }
         }
       })
+    })
+    return ret
+  },
+  getTalentData (talentData) {
+    let ret = {}
+    lodash.forEach(['a', 'e', 'q'], (key) => {
+      let map = {}
+      lodash.forEach(talentData[key].tables, (tr) => {
+        if (tr.isSame) {
+          return true
+        }
+
+        lodash.forEach(tr.values, (val) => {
+          // eslint-disable-next-line no-control-regex
+          val = val.replace(/[^\x00-\xff]/g, '').trim()
+          val = val.replace(/[a-zA-Z]/g, '').trim()
+          let valArr = []
+          let valArr2 = []
+          lodash.forEach(val.split('/'), (v, idx) => {
+            let valNum = 0
+            lodash.forEach(v.split('+'), (v) => {
+              v = v.split('*')
+              let v1 = v[0].replace('%', '').trim()
+              valNum += v1 * (v[1] || 1)
+              valArr2.push(v1 * 1)
+              if (v[1]) {
+                valArr2.push(v[1] * 1)
+              }
+            })
+            valArr.push(valNum)
+          })
+
+          let name = tr.name2 || tr.name
+          map[name] = map[name] || []
+          if (isNaN(valArr[0])) {
+            map[name].push(false)
+          } else if (valArr.length === 1) {
+            map[name].push(valArr[0])
+          } else {
+            map[name].push(valArr)
+          }
+          if (valArr2.length > 1) {
+            map[name + '2'] = map[name + '2'] || []
+            map[name + '2'].push(valArr2)
+          }
+        })
+      })
+      ret[key] = map
     })
     return ret
   }

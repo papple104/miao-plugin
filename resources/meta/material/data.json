@@ -507,15 +507,15 @@
     "type": "talent",
     "star": 4,
     "items": {
-      "「自由」的教导": {
-        "id": 421,
-        "name": "「自由」的教导",
+      "「诗文」的教导": {
+        "id": 401,
+        "name": "「诗文」的教导",
         "type": "talent",
         "star": 2
       },
-      "「抗争」的指引": {
-        "id": 452,
-        "name": "「抗争」的指引",
+      "「诗文」的指引": {
+        "id": 402,
+        "name": "「诗文」的指引",
         "type": "talent",
         "star": 3
       },
@@ -1296,5 +1296,727 @@
     "name": "空行的虚铃",
     "type": "weekly",
     "star": 5
+  },
+  "混沌真眼": {
+    "id": 173,
+    "name": "混沌真眼",
+    "type": "monster",
+    "star": 4,
+    "items": {
+      "混沌机关": {
+        "id": 171,
+        "name": "混沌机关",
+        "type": "monster",
+        "star": 2
+      },
+      "混沌枢纽": {
+        "id": 172,
+        "name": "混沌枢纽",
+        "type": "monster",
+        "star": 3
+      },
+      "混沌真眼": {
+        "id": 173,
+        "name": "混沌真眼",
+        "type": "monster",
+        "star": 4
+      }
+    }
+  },
+  "远海夷地的金枝": {
+    "id": 564,
+    "name": "远海夷地的金枝",
+    "type": "weapon",
+    "star": 5,
+    "items": {
+      "远海夷地的瑚枝": {
+        "id": 561,
+        "name": "远海夷地的瑚枝",
+        "type": "weapon",
+        "star": 2
+      },
+      "远海夷地的玉枝": {
+        "id": 562,
+        "name": "远海夷地的玉枝",
+        "type": "weapon",
+        "star": 3
+      },
+      "远海夷地的琼枝": {
+        "id": 563,
+        "name": "远海夷地的琼枝",
+        "type": "weapon",
+        "star": 4
+      },
+      "远海夷地的金枝": {
+        "id": 564,
+        "name": "远海夷地的金枝",
+        "type": "weapon",
+        "star": 5
+      }
+    }
+  },
+  "黑晶号角": {
+    "id": 63,
+    "name": "黑晶号角",
+    "type": "monster",
+    "star": 4,
+    "items": {
+      "沉重号角": {
+        "id": 61,
+        "name": "沉重号角",
+        "type": "monster",
+        "star": 2
+      },
+      "黑铜号角": {
+        "id": 62,
+        "name": "黑铜号角",
+        "type": "monster",
+        "star": 3
+      },
+      "黑晶号角": {
+        "id": 63,
+        "name": "黑晶号角",
+        "type": "monster",
+        "star": 4
+      }
+    }
+  },
+  "高塔孤王的碎梦": {
+    "id": 504,
+    "name": "高塔孤王的碎梦",
+    "type": "weapon",
+    "star": 5,
+    "items": {
+      "高塔孤王的破瓦": {
+        "id": 501,
+        "name": "高塔孤王的破瓦",
+        "type": "weapon",
+        "star": 2
+      },
+      "高塔孤王的残垣": {
+        "id": 502,
+        "name": "高塔孤王的残垣",
+        "type": "weapon",
+        "star": 3
+      },
+      "高塔孤王的断片": {
+        "id": 503,
+        "name": "高塔孤王的断片",
+        "type": "weapon",
+        "star": 4
+      },
+      "高塔孤王的碎梦": {
+        "id": 504,
+        "name": "高塔孤王的碎梦",
+        "type": "weapon",
+        "star": 5
+      }
+    }
+  },
+  "地脉的新芽": {
+    "id": 73,
+    "name": "地脉的新芽",
+    "type": "monster",
+    "star": 4,
+    "items": {
+      "地脉的旧枝": {
+        "id": 71,
+        "name": "地脉的旧枝",
+        "type": "monster",
+        "star": 2
+      },
+      "地脉的枯叶": {
+        "id": 72,
+        "name": "地脉的枯叶",
+        "type": "monster",
+        "star": 3
+      },
+      "地脉的新芽": {
+        "id": 73,
+        "name": "地脉的新芽",
+        "type": "monster",
+        "star": 4
+      }
+    }
+  },
+  "凛风奔狼的怀乡": {
+    "id": 524,
+    "name": "凛风奔狼的怀乡",
+    "type": "weapon",
+    "star": 5,
+    "items": {
+      "凛风奔狼的始龀": {
+        "id": 521,
+        "name": "凛风奔狼的始龀",
+        "type": "weapon",
+        "star": 2
+      },
+      "凛风奔狼的裂齿": {
+        "id": 522,
+        "name": "凛风奔狼的裂齿",
+        "type": "weapon",
+        "star": 3
+      },
+      "凛风奔狼的断牙": {
+        "id": 523,
+        "name": "凛风奔狼的断牙",
+        "type": "weapon",
+        "star": 4
+      },
+      "凛风奔狼的怀乡": {
+        "id": 524,
+        "name": "凛风奔狼的怀乡",
+        "type": "weapon",
+        "star": 5
+      }
+    }
+  },
+  "混沌炉心": {
+    "id": 83,
+    "name": "混沌炉心",
+    "type": "monster",
+    "star": 4,
+    "items": {
+      "混沌装置": {
+        "id": 81,
+        "name": "混沌装置",
+        "type": "monster",
+        "star": 2
+      },
+      "混沌回路": {
+        "id": 82,
+        "name": "混沌回路",
+        "type": "monster",
+        "star": 3
+      },
+      "混沌炉心": {
+        "id": 83,
+        "name": "混沌炉心",
+        "type": "monster",
+        "star": 4
+      }
+    }
+  },
+  "狮牙斗士的理想": {
+    "id": 544,
+    "name": "狮牙斗士的理想",
+    "type": "weapon",
+    "star": 5,
+    "items": {
+      "狮牙斗士的枷锁": {
+        "id": 541,
+        "name": "狮牙斗士的枷锁",
+        "type": "weapon",
+        "star": 2
+      },
+      "狮牙斗士的铁链": {
+        "id": 542,
+        "name": "狮牙斗士的铁链",
+        "type": "weapon",
+        "star": 3
+      },
+      "狮牙斗士的镣铐": {
+        "id": 543,
+        "name": "狮牙斗士的镣铐",
+        "type": "weapon",
+        "star": 4
+      },
+      "狮牙斗士的理想": {
+        "id": 544,
+        "name": "狮牙斗士的理想",
+        "type": "weapon",
+        "star": 5
+      }
+    }
+  },
+  "督察长祭刀": {
+    "id": 103,
+    "name": "督察长祭刀",
+    "type": "monster",
+    "star": 4,
+    "items": {
+      "猎兵祭刀": {
+        "id": 101,
+        "name": "猎兵祭刀",
+        "type": "monster",
+        "star": 2
+      },
+      "特工祭刀": {
+        "id": 102,
+        "name": "特工祭刀",
+        "type": "monster",
+        "star": 3
+      },
+      "督察长祭刀": {
+        "id": 103,
+        "name": "督察长祭刀",
+        "type": "monster",
+        "star": 4
+      }
+    }
+  },
+  "孤云寒林的神体": {
+    "id": 514,
+    "name": "孤云寒林的神体",
+    "type": "weapon",
+    "star": 5,
+    "items": {
+      "孤云寒林的光砂": {
+        "id": 511,
+        "name": "孤云寒林的光砂",
+        "type": "weapon",
+        "star": 2
+      },
+      "孤云寒林的辉岩": {
+        "id": 512,
+        "name": "孤云寒林的辉岩",
+        "type": "weapon",
+        "star": 3
+      },
+      "孤云寒林的圣骸": {
+        "id": 513,
+        "name": "孤云寒林的圣骸",
+        "type": "weapon",
+        "star": 4
+      },
+      "孤云寒林的神体": {
+        "id": 514,
+        "name": "孤云寒林的神体",
+        "type": "weapon",
+        "star": 5
+      }
+    }
+  },
+  "雾虚灯芯": {
+    "id": 93,
+    "name": "雾虚灯芯",
+    "type": "monster",
+    "star": 4,
+    "items": {
+      "雾虚花粉": {
+        "id": 91,
+        "name": "雾虚花粉",
+        "type": "monster",
+        "star": 2
+      },
+      "雾虚草囊": {
+        "id": 92,
+        "name": "雾虚草囊",
+        "type": "monster",
+        "star": 3
+      },
+      "雾虚灯芯": {
+        "id": 93,
+        "name": "雾虚灯芯",
+        "type": "monster",
+        "star": 4
+      }
+    }
+  },
+  "雾海云间的转还": {
+    "id": 534,
+    "name": "雾海云间的转还",
+    "type": "weapon",
+    "star": 5,
+    "items": {
+      "雾海云间的铅丹": {
+        "id": 531,
+        "name": "雾海云间的铅丹",
+        "type": "weapon",
+        "star": 2
+      },
+      "雾海云间的汞丹": {
+        "id": 532,
+        "name": "雾海云间的汞丹",
+        "type": "weapon",
+        "star": 3
+      },
+      "雾海云间的金丹": {
+        "id": 533,
+        "name": "雾海云间的金丹",
+        "type": "weapon",
+        "star": 4
+      },
+      "雾海云间的转还": {
+        "id": 534,
+        "name": "雾海云间的转还",
+        "type": "weapon",
+        "star": 5
+      }
+    }
+  },
+  "石化的骨片": {
+    "id": 143,
+    "name": "石化的骨片",
+    "type": "monster",
+    "star": 4,
+    "items": {
+      "脆弱的骨片": {
+        "id": 141,
+        "name": "脆弱的骨片",
+        "type": "monster",
+        "star": 2
+      },
+      "结实的骨片": {
+        "id": 142,
+        "name": "结实的骨片",
+        "type": "monster",
+        "star": 3
+      },
+      "石化的骨片": {
+        "id": 143,
+        "name": "石化的骨片",
+        "type": "monster",
+        "star": 4
+      }
+    }
+  },
+  "漆黑陨铁的一块": {
+    "id": 554,
+    "name": "漆黑陨铁的一块",
+    "type": "weapon",
+    "star": 5,
+    "items": {
+      "漆黑陨铁的一粒": {
+        "id": 551,
+        "name": "漆黑陨铁的一粒",
+        "type": "weapon",
+        "star": 2
+      },
+      "漆黑陨铁的一片": {
+        "id": 552,
+        "name": "漆黑陨铁的一片",
+        "type": "weapon",
+        "star": 3
+      },
+      "漆黑陨铁的一角": {
+        "id": 553,
+        "name": "漆黑陨铁的一角",
+        "type": "weapon",
+        "star": 4
+      },
+      "漆黑陨铁的一块": {
+        "id": 554,
+        "name": "漆黑陨铁的一块",
+        "type": "weapon",
+        "star": 5
+      }
+    }
+  },
+  "幽邃刻像": {
+    "id": 153,
+    "name": "幽邃刻像",
+    "type": "monster",
+    "star": 4,
+    "items": {
+      "晦暗刻像": {
+        "id": 151,
+        "name": "晦暗刻像",
+        "type": "monster",
+        "star": 2
+      },
+      "夤夜刻像": {
+        "id": 152,
+        "name": "夤夜刻像",
+        "type": "monster",
+        "star": 3
+      },
+      "幽邃刻像": {
+        "id": 153,
+        "name": "幽邃刻像",
+        "type": "monster",
+        "star": 4
+      }
+    }
+  },
+  "今昔剧画之鬼人": {
+    "id": 584,
+    "name": "今昔剧画之鬼人",
+    "type": "weapon",
+    "star": 5,
+    "items": {
+      "今昔剧画之恶尉": {
+        "id": 581,
+        "name": "今昔剧画之恶尉",
+        "type": "weapon",
+        "star": 2
+      },
+      "今昔剧画之虎啮": {
+        "id": 582,
+        "name": "今昔剧画之虎啮",
+        "type": "weapon",
+        "star": 3
+      },
+      "今昔剧画之一角": {
+        "id": 583,
+        "name": "今昔剧画之一角",
+        "type": "weapon",
+        "star": 4
+      },
+      "今昔剧画之鬼人": {
+        "id": 584,
+        "name": "今昔剧画之鬼人",
+        "type": "weapon",
+        "star": 5
+      }
+    }
+  },
+  "混沌锚栓": {
+    "id": "n112070",
+    "name": "混沌锚栓",
+    "type": "monster",
+    "star": 4,
+    "items": {
+      "混沌容器": {
+        "id": "n112068",
+        "name": "混沌容器",
+        "type": "monster",
+        "star": 2
+      },
+      "混沌模块": {
+        "id": "n112069",
+        "name": "混沌模块",
+        "type": "monster",
+        "star": 3
+      },
+      "混沌锚栓": {
+        "id": "n112070",
+        "name": "混沌锚栓",
+        "type": "monster",
+        "star": 4
+      }
+    }
+  },
+  "谧林涓露的金符": {
+    "id": "n114040",
+    "name": "谧林涓露的金符",
+    "type": "weapon",
+    "star": 5,
+    "items": {
+      "谧林涓露的铜符": {
+        "id": "n114037",
+        "name": "谧林涓露的铜符",
+        "type": "weapon",
+        "star": 2
+      },
+      "谧林涓露的铁符": {
+        "id": "n114038",
+        "name": "谧林涓露的铁符",
+        "type": "weapon",
+        "star": 3
+      },
+      "谧林涓露的银符": {
+        "id": "n114039",
+        "name": "谧林涓露的银符",
+        "type": "weapon",
+        "star": 4
+      },
+      "谧林涓露的金符": {
+        "id": "n114040",
+        "name": "谧林涓露的金符",
+        "type": "weapon",
+        "star": 5
+      }
+    }
+  },
+  "辉光棱晶": {
+    "id": "n112073",
+    "name": "辉光棱晶",
+    "type": "monster",
+    "star": 4,
+    "items": {
+      "破缺棱晶": {
+        "id": "n112071",
+        "name": "破缺棱晶",
+        "type": "monster",
+        "star": 2
+      },
+      "混浊棱晶": {
+        "id": "n112072",
+        "name": "混浊棱晶",
+        "type": "monster",
+        "star": 3
+      },
+      "辉光棱晶": {
+        "id": "n112073",
+        "name": "辉光棱晶",
+        "type": "monster",
+        "star": 4
+      }
+    }
+  },
+  "鸣神御灵的勇武": {
+    "id": 574,
+    "name": "鸣神御灵的勇武",
+    "type": "weapon",
+    "star": 5,
+    "items": {
+      "鸣神御灵的明惠": {
+        "id": 571,
+        "name": "鸣神御灵的明惠",
+        "type": "weapon",
+        "star": 2
+      },
+      "鸣神御灵的欢喜": {
+        "id": 572,
+        "name": "鸣神御灵的欢喜",
+        "type": "weapon",
+        "star": 3
+      },
+      "鸣神御灵的亲爱": {
+        "id": 573,
+        "name": "鸣神御灵的亲爱",
+        "type": "weapon",
+        "star": 4
+      },
+      "鸣神御灵的勇武": {
+        "id": 574,
+        "name": "鸣神御灵的勇武",
+        "type": "weapon",
+        "star": 5
+      }
+    }
+  },
+  "烈日威权的旧日": {
+    "id": "n114048",
+    "name": "烈日威权的旧日",
+    "type": "weapon",
+    "star": 5,
+    "items": {
+      "烈日威权的残响": {
+        "id": "n114045",
+        "name": "烈日威权的残响",
+        "type": "weapon",
+        "star": 2
+      },
+      "烈日威权的余光": {
+        "id": "n114046",
+        "name": "烈日威权的余光",
+        "type": "weapon",
+        "star": 3
+      },
+      "烈日威权的梦想": {
+        "id": "n114047",
+        "name": "烈日威权的梦想",
+        "type": "weapon",
+        "star": 4
+      },
+      "烈日威权的旧日": {
+        "id": "n114048",
+        "name": "烈日威权的旧日",
+        "type": "weapon",
+        "star": 5
+      }
+    }
+  },
+  "隐兽鬼爪": {
+    "id": 176,
+    "name": "隐兽鬼爪",
+    "type": "monster",
+    "star": 4,
+    "items": {
+      "隐兽指爪": {
+        "id": 174,
+        "name": "隐兽指爪",
+        "type": "monster",
+        "star": 2
+      },
+      "隐兽利爪": {
+        "id": 175,
+        "name": "隐兽利爪",
+        "type": "monster",
+        "star": 3
+      },
+      "隐兽鬼爪": {
+        "id": 176,
+        "name": "隐兽鬼爪",
+        "type": "monster",
+        "star": 4
+      }
+    }
+  },
+  "绿洲花园的真谛": {
+    "id": "n114044",
+    "name": "绿洲花园的真谛",
+    "type": "weapon",
+    "star": 5,
+    "items": {
+      "绿洲花园的追忆": {
+        "id": "n114041",
+        "name": "绿洲花园的追忆",
+        "type": "weapon",
+        "star": 2
+      },
+      "绿洲花园的恩惠": {
+        "id": "n114042",
+        "name": "绿洲花园的恩惠",
+        "type": "weapon",
+        "star": 3
+      },
+      "绿洲花园的哀思": {
+        "id": "n114043",
+        "name": "绿洲花园的哀思",
+        "type": "weapon",
+        "star": 4
+      },
+      "绿洲花园的真谛": {
+        "id": "n114044",
+        "name": "绿洲花园的真谛",
+        "type": "weapon",
+        "star": 5
+      }
+    }
+  },
+  "偏光棱镜": {
+    "id": 183,
+    "name": "偏光棱镜",
+    "type": "monster",
+    "star": 4,
+    "items": {
+      "黯淡棱镜": {
+        "id": 181,
+        "name": "黯淡棱镜",
+        "type": "monster",
+        "star": 2
+      },
+      "水晶棱镜": {
+        "id": 182,
+        "name": "水晶棱镜",
+        "type": "monster",
+        "star": 3
+      },
+      "偏光棱镜": {
+        "id": 183,
+        "name": "偏光棱镜",
+        "type": "monster",
+        "star": 4
+      }
+    }
+  },
+  "茁壮菌核": {
+    "id": "n112064",
+    "name": "茁壮菌核",
+    "type": "monster",
+    "star": 4,
+    "items": {
+      "失活菌核": {
+        "id": "n112062",
+        "name": "失活菌核",
+        "type": "monster",
+        "star": 2
+      },
+      "休眠菌核": {
+        "id": "n112063",
+        "name": "休眠菌核",
+        "type": "monster",
+        "star": 3
+      },
+      "茁壮菌核": {
+        "id": "n112064",
+        "name": "茁壮菌核",
+        "type": "monster",
+        "star": 4
+      }
+    }
   }
 }
