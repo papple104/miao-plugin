@@ -6,11 +6,12 @@
 * */
 import lodash from 'lodash'
 import Base from './Base.js'
-import { Data } from '../components/index.js'
+import { Data, Format } from '../components/index.js'
 import CharImg from './character-lib/CharImg.js'
 import CharTalent from './character-lib/CharTalent.js'
 import CharId from './character-lib/CharId.js'
 import CharMeta from './character-lib/CharMeta.js'
+import CharCfg from './character-lib/CharCfg.js'
 
 let { abbrMap, wifeMap, idSort, idMap } = CharId
 
@@ -32,7 +33,7 @@ class Character extends Base {
     if (!this.isCustom) {
       let meta = getMeta(name)
       this.meta = meta
-      this.elem = CharId.getElem(elem || meta.elem) || 'anemo'
+      this.elem = Format.elem(elem || meta.elem, 'anemo')
     } else {
       this.meta = {}
     }
@@ -94,7 +95,7 @@ class Character extends Base {
 
   // 获取元素名称
   get elemName () {
-    return CharId.getElemName(this.elem)
+    return Format.elemName(this.elem)
   }
 
   // 获取角色描述
@@ -112,10 +113,12 @@ class Character extends Base {
     return this.getImgs().side
   }
 
+  // gacha图像
   get gacha () {
     return this.getImgs().gacha
   }
 
+  // 获取character相关图像
   get imgs () {
     return this.getImgs()
   }
@@ -125,6 +128,7 @@ class Character extends Base {
     return this.getDetail()
   }
 
+  // 获取命座天赋等级
   get talentCons () {
     if (this.isTraveler) {
       return this.elem === 'dendro' ? { e: 3, q: 5 } : { e: 5, q: 3 }
@@ -132,17 +136,15 @@ class Character extends Base {
     return this.meta?.talentCons || {}
   }
 
+  // 获取attr列表
   getAttrList () {
     let { meta } = this
     return CharMeta.getAttrList(meta.baseAttr, meta.growAttr, this.elemName)
   }
 
+  // 获取素材
   getMaterials (type = 'all') {
     return CharMeta.getMaterials(this, type)
-  }
-
-  getLvStat () {
-    return CharMeta.getLvStat(this)
   }
 
   // 获取生日
@@ -167,15 +169,18 @@ class Character extends Base {
     return CharTalent.getAvatarTalent(this.id, talent, cons, mode, this.talentCons)
   }
 
+  // 检查老婆类型
   checkWifeType (type) {
     return !!wifeMap[type][this.id]
   }
 
+  // 检查时装
   checkCostume (id) {
     let costume = this.meta?.costume || []
     return costume.includes(id * 1)
   }
 
+  // 判断是否为某种元素角色
   isElem (elem = '') {
     elem = elem.toLowerCase()
     return this.elem === elem || this.elemName === elem
@@ -310,29 +315,22 @@ class Character extends Base {
     return arr.sort((a, b) => (idSort[a] || 300) - (idSort[b] || 300))
   }
 
-  async getCalcRule () {
+  // 获取伤害计算配置
+  getCalcRule () {
     if (!this._calcRule && this._calcRule !== false) {
-      let cfg = await Data.importModule(`resources/meta/character/${this.name}/calc.js`)
-      if (lodash.isEmpty(cfg)) {
-        this._calcRule = false
-      } else {
-        this._calcRule = {
-          details: cfg.details || false, // 计算详情
-          buffs: cfg.buffs || [], // 角色buff
-          defParams: cfg.defParams || {}, // 默认参数，一般为空
-          defDmgIdx: cfg.defDmgIdx || -1, // 默认详情index
-          defDmgKey: cfg.defDmgKey || '',
-          mainAttr: cfg.mainAttr || 'atk,cpct,cdmg', // 伤害属性
-          enemyName: cfg.enemyName || '小宝' // 敌人名称
-        }
-      }
+      this._calcRule = CharCfg.getCalcRule(this)
     }
     return this._calcRule
   }
 
-  static matchElem (str, def) {
-    return CharId.matchElem(str, def)
+  getArtisCfg () {
+    if (!this._artisRule && this._artisRule !== false) {
+      this._artisRule = CharCfg.getArtisCfg(this)
+    }
+    return this._artisRule
   }
 }
+
+Character.CharId = CharId
 
 export default Character

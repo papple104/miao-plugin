@@ -1,7 +1,7 @@
 import lodash from 'lodash'
 import Base from './Base.js'
 import moment from 'moment'
-import { Data } from '../components/index.js'
+import { Data, Cfg } from '../components/index.js'
 import { Character, ProfileArtis, ProfileDmg } from './index.js'
 import AttrCalc from './profile-lib/AttrCalc.js'
 
@@ -15,16 +15,25 @@ export default class ProfileData extends Base {
     this.id = char.id
     this.char = char
     this.uid = uid || ''
-
     this.setBasic(ds)
     ds.attr && this.setAttr(ds.attr)
     ds.weapon && this.setWeapon(ds.weapon)
     ds.talent && this.setTalent(ds.talent)
     this.artis = new ProfileArtis(this.id, this.elem)
     ds.artis && this.setArtis(ds.artis)
-    if (process.argv.includes('web-debug')) {
-      AttrCalc.getAttr(this)
+    if (Cfg.get('attrCalc') && this.hasData) {
+      this._attr = AttrCalc.create(this)
+      this.attr = this._attr.calc()
+      this._attrCalc = true
     }
+  }
+
+  static create (ds, uid) {
+    let profile = new ProfileData(ds, uid)
+    if (!profile) {
+      return false
+    }
+    return profile
   }
 
   setBasic (ds = {}) {
@@ -63,9 +72,7 @@ export default class ProfileData extends Base {
   }
 
   setArtis (ds = false) {
-    if (ds) {
-      this.artis.setProfile(this, ds)
-    }
+    this.artis.setProfile(this, ds)
   }
 
   setTalent (ds = {}, mode = 'level') {
@@ -82,16 +89,16 @@ export default class ProfileData extends Base {
     if (!this.dataSource || !['enka', 'input2', 'miao', 'miao-pre'].includes(this.dataSource)) {
       return false
     }
-    // 检查旅行者
-    if (['空', '荧'].includes(this.name)) {
-      return !!this.elem
-    }
     // 检查属性
-    if (!this.weapon || !this.attr || !this.talent || !this.artis) {
+    if (!this.weapon || !this.talent || !this.artis) {
       return false
     }
     if (this.dataSource === 'miao-pre') {
       this.dataSource = 'miao'
+    }
+    // 检查旅行者
+    if (['空', '荧'].includes(this.name)) {
+      return !!this.elem
     }
     return true
   }

@@ -1,37 +1,10 @@
 import { usefulAttr } from '../../resources/meta/artifact/artis-mark.js'
-import { Data } from '../../components/index.js'
 import lodash from 'lodash'
-import fs from 'fs'
 
-let charCfg = {}
-
-async function init () {
-  let charPath = process.cwd() + '/plugins/miao-plugin/resources/meta/character'
-  let chars = fs.readdirSync(charPath)
-  for (let char of chars) {
-    if (fs.existsSync(`${charPath}/${char}/artis.js`)) {
-      charCfg[char] = await Data.importModule(`resources/meta/character/${char}/artis.js`)
-    }
-    // 允许自定义配置文件，会覆盖喵喵版评分规则
-    if (fs.existsSync(`${charPath}/${char}/artis_user.js`)) {
-      charCfg[char] = await Data.importModule(`resources/meta/character/${char}/artis_user.js`)
-    }
-  }
-}
-
-await init()
 const CharArtis = {
-  reduceWeight (weight, key, plus, max) {
-    let original = weight[key] || 0
-    if (original < max) {
-      weight[key] = Math.max(original + plus, max)
-      return true
-    }
-    return false
-  },
+
   getCharArtisCfg (char, profile, artis) {
     let { attr, weapon } = profile
-
     let rule = function (title, attrWeight) {
       return {
         title,
@@ -96,7 +69,7 @@ const CharArtis = {
       }
     }
 
-    let charRule = charCfg[char.name]?.default || function ({ def }) {
+    let charRule = char.getArtisCfg() || function ({ def }) {
       return def(usefulAttr[char.name] || { atk: 75, cpct: 100, cdmg: 100 })
     }
 

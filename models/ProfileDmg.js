@@ -2,7 +2,7 @@ import fs from 'fs'
 import lodash from 'lodash'
 import Base from './Base.js'
 import { Character } from './index.js'
-import { attrMap } from './profile-lib/DmgCalcMeta.js'
+import { attrMap } from '../resources/meta/artifact/index.js'
 import DmgBuffs from './profile-lib/DmgBuffs.js'
 import DmgAttr from './profile-lib/DmgAttr.js'
 import DmgCalc from './profile-lib/DmgCalc.js'
@@ -153,6 +153,9 @@ export default class ProfileDmg extends Base {
       }
       let params = lodash.merge({}, defParams, detail.params || {})
       let { attr } = DmgAttr.calcAttr({ originalAttr, buffs, meta, params, talent: detail.talent || '' })
+      if (detail.isStatic) {
+        return
+      }
       if (detail.check && !detail.check(DmgAttr.getDs(attr, meta, params))) {
         return
       }
@@ -192,6 +195,7 @@ export default class ProfileDmg extends Base {
         attr: []
       }
 
+      // 计算角色属性增减
       mainAttr = mainAttr.split(',')
       let params = lodash.merge({}, defParams, detail.params || {})
       let basicDmg = dmgDetail.basicRet
@@ -229,7 +233,6 @@ export default class ProfileDmg extends Base {
     if (mode === 'single') {
       return ret[0]
     }
-
     return {
       ret,
       msg,

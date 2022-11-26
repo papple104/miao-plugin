@@ -40,14 +40,6 @@
       <li><i class="i-re"></i>元素充能<strong>{{attr.recharge}}</strong></li>
       <li><i class="i-dmg"></i>伤害加成<strong>{{attr.dmg}}</strong></li>
     </ul>
-    <div class="data-info">
-      {{if data.dataSource}}
-      <span>数据源：{{ {miao:"喵喵Api",enka:"Enka.Network",input:"手工录入"}[data.dataSource]||data.dataSource }}</span>
-      {{/if}}
-      {{if data.updateTime}}
-      <span class="time">{{data.updateTime}}</span>
-      {{/if}}
-    </div>
   </div>
 
   <div class="char-cons">
@@ -61,9 +53,19 @@
     </div>
     {{/each}}
   </div>
+
+  <div class="data-info">
+    {{if data.dataSource}}
+    <span>{{if data._attrCalc}}[面板计算：开启]  ·{{/if}} 数据源：{{ {miao:"喵喵Api",enka:"Enka.Network",input:"手工录入"}[data.dataSource]||data.dataSource }}</span>
+    {{/if}}
+    {{if data.updateTime}}
+    <span class="time">{{data.updateTime}}</span>
+    {{/if}}
+  </div>
 </div>
 
 {{if mode === "profile" && dataSource !== "input2"}}
+{{set ad = artisDetail}}
 <div class="artis">
   <div>
     <div class="item weapon">
@@ -76,16 +78,16 @@
       </div>
     </div>
     <div class="item arti-stat">
-      <div class="arti-class-title">评分规则：{{classTitle}}</div>
+      <div class="arti-class-title">评分规则：{{ad.classTitle}}</div>
       <div class="arti-stat-ret">
-        <div><strong class="mark-{{totalMarkClass}}">{{totalMarkClass}}</strong><span>圣遗物评级</span></div>
-        <div><strong>{{totalMark}}</strong><span>圣遗物总分</span></div>
+        <div><strong class="mark-{{ad.markClass}}">{{ad.markClass}}</strong><span>圣遗物评级</span></div>
+        <div><strong>{{ad.mark}}</strong><span>圣遗物总分</span></div>
       </div>
     </div>
   </div>
-  {{each artis ds idx}}
+  {{each ad.artis ds idx}}
   <div class="item arti">
-    {{if ds && ds.name && ds.main && ds.main.title && ds.main.title!="undefined"}}
+    {{if ds && ds.name && ds.main && ds.main.key && ds.main.key!="undefined"}}
     <div class="arti-icon">
       <div class="img" style="background-image:url({{_res_path}}{{ds.img}})"></div>
       <span>+{{ds.level}}</span>
@@ -95,11 +97,12 @@
       <span class="mark mark-{{ds.markClass}}"><span>{{ds.mark}}分</span> - {{ds.markClass}}</span>
     </div>
     <ul class="detail attr">
-      <li class="arti-main"><span class="title">{{ds.main.title}}</span><span class="val">+{{ds.main.value}}</span></li>
+      <li class="arti-main"><span class="title">{{artisKeyTitle[ds.main?.key]}}</span><span class="val">+{{ds.main.value}}</span>
+      </li>
       {{each ds.attrs attr}}
-      {{if attr && attr.title}}
-      <li class="{{usefulMark[attr.title]*1 > 79.9 ?`great`:(usefulMark[attr.title]*1>0 ? `useful`:`nouse`)}}">
-        <span class="title"> {{if attr.upNum}}<i class="up-num up-{{attr.upNum}}"></i>{{/if}}{{attr.title}}</span>
+      {{if attr && attr.key}}
+      <li class="{{ad.charWeight[attr.key]*1 > 79.9 ?`great`:(ad.charWeight[attr.key]*1>0 ? `useful`:`nouse`)}}">
+        <span class="title"> {{if attr.upNum}}<i class="up-num up-{{attr.upNum}}"></i>{{/if}}{{artisKeyTitle[attr.key]}}</span>
         <span class="val">+{{attr.value}}</span>
       </li>
       {{/if}}
