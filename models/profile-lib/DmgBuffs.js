@@ -10,7 +10,7 @@ let artisBuffs = {}
 
 // lazy load
 setTimeout(async function init () {
-  weaponBuffs = (await Data.importModule('resources/meta/weapon/index.js')).calc || {}
+  weaponBuffs = (await Data.importModule('resources/meta/weapon/index.js')).weaponBuffs || {}
   artisBuffs = (await Data.importModule('resources/meta/artifact/index.js')).calc || {}
 })
 
@@ -72,7 +72,7 @@ let DmgBuffs = {
       if (lodash.isString(buff)) {
         if (mKey[buff]) {
           buff = {
-            title: `元素精通：${mKey[buff]}伤害提高[${buff}]%`,
+            title: `元素精通：${mKey[buff]}伤害提高[_${buff}]%`,
             mastery: buff
           }
           buffs[idx] = buff
