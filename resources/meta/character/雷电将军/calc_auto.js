@@ -1,9 +1,28 @@
 export const details = [{
+  title: '零愿力Q首刀',
+  params: {
+    type: 1,
+    num: 0,
+    ban: 0,
+    team:false
+  },
+  dmg: ({ talent, attr }, dmg) => dmg(talent.q['梦想一刀基础伤害'], 'q')
+}, {
+  title: '满愿力Q首刀',
+  params: {
+    type: 0,
+    num: 60,
+    ban: 0,
+    team:false
+  },
+  dmg: ({ talent, attr }, dmg) => dmg(talent.q['梦想一刀基础伤害'], 'q')
+},{
   title: '雷九八万满愿力Q首刀',
   params: {
     type: 0,
     num: 60,
-    ban: 0
+    ban: 0,
+    team:true
   },
   dmg: ({ talent, attr }, dmg) => dmg(talent.q['梦想一刀基础伤害'], 'q')
 }, {
@@ -11,7 +30,8 @@ export const details = [{
   params: {
     type: 0,
     num: 60,
-    ban: 1
+    ban: 1,
+    team:true
   },
   dmg: ({ talent, attr }, dmg) => dmg(talent.q['梦想一刀基础伤害'], 'q')
 }, {
@@ -19,7 +39,8 @@ export const details = [{
   params: {
     type: 1,
     num: 60,
-    ban: 1
+    ban: 1,
+    team:true
   },
   dmg: ({ talent, attr }, dmg) => dmg(talent.q['重击伤害'], 'q')
 }]
@@ -27,10 +48,11 @@ export const details = [{
 export const defParams = {
   ban: 1,
   num: 60,
-  type: 0
+  type: 0,
+  team:true
 }
 
-export const defDmgIdx = 0
+export const defDmgIdx = 2
 export const mainAttr = 'atk,cpct,cdmg,recharge,mastery'
 
 export const buffs = [
@@ -55,13 +77,18 @@ export const buffs = [
     data: {
       dmg: ({ attr }) => Math.max(attr.recharge.base + attr.recharge.plus - 100, 0) * 0.4
     }
-  }, {
+  }, {check: ({ params }) => params.team === true,
     title: '风鹰宗室班：增加[atkPlus]点攻击力与[atkPct]%攻击力',
     data: {
       atkPct: ({ params }) =>20 * params.ban,
       atkPlus: ({ params }) =>1202.35 * params.ban
   }
-  }, {
+  }, {check: ({ cons,params }) => cons > 2 && params.team === true,
+    title: '八重4命：增加20%雷伤',
+    data: {
+      dmg: ({ params }) =>20 * (1 - params.ban)
+  }
+  }, {check: ({ cons,params }) => cons <= 1 && params.team === true,
     title: '精1苍古0命万叶：获得[dmg]%增伤(苍古普攻16增伤)，增加[atkPct]%攻击,减抗[kx]%',
     data: {
       aDmg:16,
@@ -69,13 +96,36 @@ export const buffs = [
       a3Dmg:16,
       dmg: 40,
       atkPct:20,
-      kx:40
+      kx:40,
    }
-  }, {
-    title: '天空九条：增加[atkPlus]点攻击力与[cdmg]%爆伤',
+  }, {check: ({ cons,params }) =>  (cons < 3&& cons > 1&& params.team === true),
+    title: '精1苍古2命万叶：获得[dmg]%增伤(苍古普攻16增伤)，增加[atkPct]%攻击,减抗[kx]%,精通[mastery]',
+    data: {
+      aDmg:16,
+      a2Dmg:16,
+      a3Dmg:16,
+      dmg: 48,
+      atkPct:20,
+      kx:40,
+      mastery:200
+   }
+  }, {check: ({ cons,params }) =>  (cons >= 3 && params.team === true),
+    title: '精5苍古6命万叶：获得[dmg]%增伤(苍古普攻32增伤)，增加[atkPct]%攻击,减抗[kx]%,精通[mastery]',
+    data: {
+      aDmg:32,
+      a2Dmg:32,
+      a3Dmg:32,
+      dmg: 48,
+      atkPct:40,
+      kx:40,
+      mastery:200
+   }
+  }, {check: ({ params }) => params.team === true,
+    title: '教官天空九条：增加[atkPlus]点攻击力与[cdmg]%爆伤,精通[mastery]',
     data: {
       atkPlus: 794.2,
       cdmg:60,
+      mastery:120
    }
   }
       ]

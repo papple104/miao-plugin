@@ -1,10 +1,11 @@
-import { Common, App } from '../components/index.js'
+import { Common, App, Data } from '../components/index.js'
 import { Character } from '../models/index.js'
 import { getTargetUid, getProfile, profileHelp } from './character/ProfileCommon.js'
 import { profileArtis, profileArtisList } from './character/ProfileArtis.js'
 import { renderProfile } from './character/ProfileDetail.js'
 import { profileStat } from './character/ProfileStat.js'
 import { profileList } from './character/ProfileList.js'
+import { uploadCharacterImg, delProfileImg, profileImgList } from './character/ImgUpload.js'
 import { enemyLv } from './character/ProfileUtils.js'
 import ProfileChange from './profile/ProfileChange.js'
 import { groupRank, resetRank, refreshRank } from './character/ProfileRank.js'
@@ -73,7 +74,37 @@ app.reg('profile-refresh', getProfile, {
   describe: '【#角色】 获取游戏橱窗详情数据'
 })
 
+app.reg('upload-img', uploadCharacterImg, {
+  rule: /^#?\s*(?:上传|添加)(.+)(?:面板图)\s*$/,
+  describe: '【#上传刻晴面板图】 上传角色面板图'
+})
+app.reg('del-profile', delProfileImg, {
+  rule: /^#?\s*(?:移除|清除|删除)(.+)(?:面板图)(\d){1,}\s*$/,
+  describe: '【#删除刻晴面板图1】 删除指定角色面板图（序号）'
+})
+app.reg('profile-img-list', profileImgList, {
+  rule: /^#?\s*(.+)(?:面板图列表)\s*$/,
+  describe: '【#刻晴面板图列表】 删除指定角色面板图（序号）'
+})
+/**
+ app.reg('del-uidflie', delProfile, {
+  rule: /^#?\s*(?:移除|清除|删除)面板数据$/,
+  describe: '【#删除面板数据】 删除面板数据'
+})
+ */
+
 export default app
+
+export async function delProfile (e) {
+  let uid = await getTargetUid(e)
+  if (!uid) {
+    return true
+  }
+  if (Data.delfile(`data/UserData/${uid}.json`)) {
+    e.reply(`uid:${uid}缓存面板数据已删除~`)
+  }
+  return true
+}
 
 // 查看当前角色
 export async function profileDetail (e) {

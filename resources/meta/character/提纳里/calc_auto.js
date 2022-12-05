@@ -1,11 +1,14 @@
 export const details = [{
-  title: '提万妲花筥箭激化伤害',
+  title: '花筥箭激化伤害',
+  params: { q: false,team:false },
   dmg: ({ talent }, dmg) => dmg(talent.a['花筥箭伤害'], 'a2', '超激化')
 }, {
-  title: '提万妲单支藏蕴花矢伤害',
+  title: '单支藏蕴花矢伤害',
+  params: { q: false,team:false },
   dmg: ({ talent, cons }, dmg) => dmg(talent.a['藏蕴花矢伤害'], 'a2')
 }, {
-  title: '提万妲二段重击总伤害',
+  title: '二段重击总伤害',
+  params: { q: false,team:false },
   dmg: ({ talent, cons }, dmg) => {
     let d1 = dmg(talent.a['花筥箭伤害'], 'a2')
     let d2 = dmg(talent.a['藏蕴花矢伤害'], 'a2')
@@ -16,14 +19,14 @@ export const details = [{
     }
   }
 }, {
-  title: '提万妲Q总伤害',
+  title: 'Q总伤害',
   params: { q: true },
   dmg: ({ talent, cons }, dmg) => {
     return dmg(talent.q['缠藤箭伤害'] * 6 + talent.q['次级缠藤箭伤害'] * 6, 'q')
   }
 }, {
-  title: '提万妲eQ3e3a总激化伤害',
-  params: { q: true },
+  title: '提万妲eQ3ae3a总激化伤害',
+  params: { q: true,team:true },
   dmg: ({ talent, cons }, dmg) => {
     let d1 = dmg(talent.a['花筥箭伤害'], 'a2', '超激化')
     let d2 = dmg(talent.a['藏蕴花矢伤害'], 'a2')
@@ -39,6 +42,10 @@ export const details = [{
     }
   }
 }]
+export const defParams = {
+    q: true,
+    team:true
+}
 
 // 10144 6794&10596
 export const mainAttr = 'atk,cpct,cdmg,mastery'
@@ -77,18 +84,41 @@ export const buffs = [{
 }, {
   title: '提纳里6命：花筥箭在命中后能产生1枚额外的藏蕴花矢',
   cons: 6
-},{
-    title: '精1苍古0命万叶：获得[dmg]%增伤(苍古普攻16增伤)，增加[atkPct]%攻击,减抗[kx]%',
+}, {check: ({ cons,params }) => cons <= 1 && params.team === true,
+    title: '精1苍古0命万叶：获得[dmg]%增伤(苍古普攻16增伤)，增加[atkPct]%攻击',
     data: {
       aDmg:16,
       a2Dmg:16,
       a3Dmg:16,
-      dmg: 40,
-      atkPct:20,
-      kx:40
+      atkPct:20
    }
-  }, {
-    title: '精1千夜纳西妲：增加精通[mastery]（包括双草）,减抗[kx]%',
+  }, {check: ({ cons,params }) => ((cons < 6 && cons >1) && params.team === true),
+    title: '精1苍古2命万叶：获得[dmg]%增伤(苍古普攻16增伤)，增加[atkPct]%攻击,精通[mastery]',
+    data: {
+      aDmg:16,
+      a2Dmg:16,
+      a3Dmg:16,
+      atkPct:20,
+      mastery:200
+   }
+  }, {check: ({ cons,params }) =>  (cons >= 6 && params.team === true),
+    title: '精5苍古6命万叶：获得[dmg]%增伤(苍古普攻32增伤)，增加[atkPct]%攻击,精通[mastery]',
+    data: {
+      aDmg:32,
+      a2Dmg:32,
+      a3Dmg:32,
+      atkPct:40,
+      mastery:200
+   }
+  }, {check: ({ cons,params }) =>  (cons >= 2&& params.team === true),
+    title: '精5千夜草套纳西妲：增加精通[mastery]（包括双草）,减防[enemyDef]%,减抗[kx]%',
+    data: {
+      mastery: 398,
+      enemyDef: 30,
+      kx:30
+   }
+  }, {check: ({ cons,params }) =>  (cons < 2&& params.team === true),
+    title: '精1千夜草套纳西妲：增加精通[mastery]（包括双草）,减抗[kx]%',
     data: {
       mastery: 390,
       kx:30

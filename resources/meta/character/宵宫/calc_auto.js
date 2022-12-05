@@ -1,20 +1,24 @@
 export const details = [{
-  title: '宵夜万班首段普攻',
-  params: { num: 1 },
+  title: '首段普攻',
+  params: { num: 1 ,team:false},
   dmg: ({ talent }, dmg) => dmg(talent.a['一段伤害'], 'a')
 }, {
-  title: '宵夜万班普攻尾箭',
-  params: { num: 10 },
+  title: '普攻尾箭',
+  params: { num: 10 ,team:false},
   dmg: ({ talent }, dmg) => dmg(talent.a['五段伤害'], 'a')
 }, {
+  title: '尾箭蒸发',
+  params: { num: 10 ,team:false},
+  dmg: ({ talent }, dmg) => dmg(talent.a['五段伤害'], 'a', 'vaporize')
+}, {
   title: '宵夜万班尾箭蒸发',
-  params: { num: 10 },
+  params: { num: 10 ,team:true},
   dmg: ({ talent }, dmg) => dmg(talent.a['五段伤害'], 'a', 'vaporize')
 }, {
   check: ({ cons }) => cons >= 6,
   dmgKey: 'e',
   title: '宵夜万班凹双蒸',
-  params: { num: 10 },
+  params: { num: 10 ,team:true},
   dmg: ({ talent }, dmg) =>{
   let a0Dmg = dmg(talent.a['一段伤害']/2, 'a', 'vaporize')
   let a1Dmg = dmg(talent.a['一段伤害']/2, 'a')
@@ -34,7 +38,7 @@ export const details = [{
   check: ({ cons }) => cons < 6,
   dmgKey: 'e',
   title: '宵夜万班147蒸发',
-  params: { num: 10 },
+  params: { num: 10 ,team:true},
   dmg: ({ talent }, dmg) =>{
   let a0Dmg = dmg(talent.a['一段伤害'], 'a', 'vaporize')
   let a1Dmg = dmg(talent.a['一段伤害'], 'a')
@@ -52,6 +56,11 @@ export const details = [{
 export const defDmgKey = 'e'
 export const mainAttr = 'atk,cpct,cdmg,mastery'
 
+export const defParams = {
+    num: 10 ,team:true
+}
+
+
 export const buffs = [{
   title: '焰硝庭火舞：开启E后额外提升普通[aMulti]%伤害',
   data: {
@@ -68,7 +77,7 @@ export const buffs = [{
       atkPct: 20,
       atkPlus: 1202.35
   }
-  }, {
+  }, {check: ({ cons,params }) => cons <= 1 && params.team === true,
     title: '精1苍古0命万叶：获得[dmg]%增伤(苍古普攻16增伤)，增加[atkPct]%攻击,减抗[kx]%',
     data: {
       aDmg:16,
@@ -76,9 +85,31 @@ export const buffs = [{
       a3Dmg:16,
       dmg: 40,
       atkPct:20,
-      kx:40
+      kx:40,
    }
-  }, {
+  }, {check: ({ cons,params }) => ((cons < 6 && cons >1) && params.team === true),
+    title: '精1苍古2命万叶：获得[dmg]%增伤(苍古普攻16增伤)，增加[atkPct]%攻击,减抗[kx]%,精通[mastery]',
+    data: {
+      aDmg:16,
+      a2Dmg:16,
+      a3Dmg:16,
+      dmg: 48,
+      atkPct:20,
+      kx:40,
+      mastery:200
+   }
+  }, {check: ({ cons,params }) =>  (cons >= 6 && params.team === true),
+    title: '精5苍古6命万叶：获得[dmg]%增伤(苍古普攻32增伤)，增加[atkPct]%攻击,减抗[kx]%,精通[mastery]',
+    data: {
+      aDmg:32,
+      a2Dmg:32,
+      a3Dmg:32,
+      dmg: 48,
+      atkPct:40,
+      kx:40,
+      mastery:200
+   }
+  }, {check: ({ params }) => params.team === true,
     title: '夜兰：获得[dmg]%增伤',
     data: {
       dmg: 35
@@ -90,7 +121,7 @@ export const buffs = [{
     dmg: ({ params }) => params.num > 1 ? 25 : 0
   }
 },{
-  title: '宵宫6命：加特林（以1.3倍折合）',
+  title: '宵宫6命：加特林(按照一轮普攻触发3次，尾箭双蒸计算)',
   cons: 6,
   data: {
     aMulti: 0
