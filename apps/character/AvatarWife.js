@@ -28,6 +28,10 @@ const relationMap = {
   son: {
     keyword: '儿子'.split(','),
     type: 3
+  },
+  all: {
+    keyword: '后宫'.split(','),
+    type: -1
   }
 }
 
@@ -133,7 +137,7 @@ export async function wife (e) {
       } else {
         wifeList = lodash.map(wifeList, (name) => {
           let char = Character.get(name)
-          if (char && char.checkWifeType(targetCfg.type)) {
+          if (char && (targetCfg.type === -1 || char.checkWifeType(targetCfg.type))) {
             return char.name
           }
         })

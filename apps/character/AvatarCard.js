@@ -104,7 +104,7 @@ export async function getAvatarList (e, type, mys) {
   }
   let list = []
   for (let val of avatars) {
-    if (type !== false) {
+    if (type !== false && type != -1) {
       if (!Character.checkWifeType(val.id, type)) {
         continue
       }
