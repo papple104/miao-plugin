@@ -135,7 +135,9 @@ const ProfileChange = {
         }
       }
       if (!lodash.isEmpty(char)) {
-        change.char = char
+        if (char.isRelease || Common.cfg('charWikiLeak')) {
+          change.char = char
+        }
       }
     })
     ret.change = lodash.isEmpty(change) ? false : change
@@ -163,7 +165,7 @@ const ProfileChange = {
     if (!char) {
       return false
     }
-    if (!char.isRelease && !Common.cfg(e, 'charWikiLeak')) {
+    if (!char.isRelease && !Common.cfg('charWikiLeak')) {
       e.reply('角色尚未实装')
       return true
     }

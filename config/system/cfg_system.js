@@ -87,7 +87,7 @@ export const cfgSchema = {
         def: false,
         oldCfgKey: 'wiki.leak',
         showDesc: true,
-        desc: '开启后才会显示未实装角色的图鉴信息，仅供参考，请以游戏内实装为准'
+        desc: '开启后才能查看未实装角色图鉴或换使用未实装内容换面板，数据仅供参考，请以游戏正式实装时为准'
       },
       charPic: {
         title: '角色图片',

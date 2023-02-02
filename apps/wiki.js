@@ -55,7 +55,7 @@ function checkCharacter (e) {
   if (!char) {
     return false
   }
-  if (mode !== 'pic' && !char.isRelease && !Common.cfg(e, 'charWikiLeak')) {
+  if (mode !== 'pic' && !char.isRelease && !Common.cfg('charWikiLeak')) {
     return false
   }
   e.wikiMode = mode
