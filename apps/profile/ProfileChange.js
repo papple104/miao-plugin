@@ -2,7 +2,7 @@
  * 面板数据替换相关逻辑
  */
 import lodash from 'lodash'
-import { Profile, Data } from '../../components/index.js'
+import { Profile, Data, Common } from '../../components/index.js'
 import { Character, ProfileData, Weapon } from '../../models/index.js'
 
 const keyMap = {
@@ -162,6 +162,10 @@ const ProfileChange = {
     let char = Character.get(dc?.char || source.id || charid)
     if (!char) {
       return false
+    }
+    if (!char.isRelease && !Common.cfg(e, 'charWikiLeak')) {
+      e.reply('角色尚未实装')
+      return true
     }
     let level = dc.level || source.level || 90
     let promote = level === source.level ? source.promote : undefined
