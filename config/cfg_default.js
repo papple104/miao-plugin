@@ -30,7 +30,7 @@ export const charWiki = true
 // #刻晴天赋/#刻晴命座 的天赋信息
 export const charWikiTalent = true
 
-// 以上信息(图鉴天赋命座)是否对未实装角色支持
+// 开启后才能查看未实装角色图鉴或换使用未实装内容换面板，数据仅供参考，请以游戏正式实装时为准
 export const charWikiLeak = false
 
 // 角色图片

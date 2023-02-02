@@ -18,6 +18,7 @@ class Weapon extends Base {
     this.meta = meta
     this.type = meta.type
     this.star = meta.star
+    this.eta  = meta.eta
     return this._cache()
   }
 
@@ -48,6 +49,10 @@ class Weapon extends Base {
   get maxAffix () {
     let datas = this.detail?.affixData?.datas || {}
     return (datas['0'] && datas['0'][4]) ? 5 : 1
+  }
+
+  get isRelease () {
+    return this.eta ? this.eta * 1 < new Date() * 1 : true
   }
 
   getDetail () {

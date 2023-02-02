@@ -38,7 +38,8 @@ for (let type in weaponType) {
     data[ds.name] = {
       name: ds.name,
       type,
-      star: ds.star
+      star: ds.star,
+      eta: ds.eta || undefined,
     }
   })
 }

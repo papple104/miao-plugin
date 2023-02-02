@@ -88,15 +88,17 @@ const ProfileChange = {
         let weaponName = lodash.trim(wRet[5])
         let weapon = Weapon.get(weaponName)
         if (weapon || weaponName === '武器' || Weapon.isWeaponSet(weaponName)) {
-          let affix = wRet[2] || wRet[3]
-          affix = { 一: 1, 二: 2, 三: 3, 四: 4, 五: 5, 满: 5 }[affix] || affix * 1
-          let tmp = {
-            weapon: (Weapon.isWeaponSet(weaponName) ? weaponName : weapon?.name) || '',
-            affix: affix || '',
-            level: wRet[1] * 1 || wRet[4] * 1 || ''
-          }
-          if (lodash.values(tmp).join('')) {
-            change.weapon = tmp
+          if (weapon.isRelease || Common.cfg('charWikiLeak')) {
+            let affix = wRet[2] || wRet[3]
+            affix = { 一: 1, 二: 2, 三: 3, 四: 4, 五: 5, 满: 5 }[affix] || affix * 1
+            let tmp = {
+              weapon: (Weapon.isWeaponSet(weaponName) ? weaponName : weapon?.name) || '',
+              affix: affix || '',
+              level: wRet[1] * 1 || wRet[4] * 1 || ''
+            }
+            if (lodash.values(tmp).join('')) {
+              change.weapon = tmp
+            }
           }
           return true
         }
@@ -130,14 +132,12 @@ const ProfileChange = {
       txt = lodash.trim(txt)
       if (txt) {
         let chars = Character.get(txt)
-        if (chars) {
+        if (chars && (char.isRelease || Common.cfg('charWikiLeak'))) {
           char.char = chars.id
         }
       }
       if (!lodash.isEmpty(char)) {
-        if (char.isRelease || Common.cfg('charWikiLeak')) {
-          change.char = char
-        }
+        change.char = char
       }
     })
     ret.change = lodash.isEmpty(change) ? false : change
@@ -166,8 +166,7 @@ const ProfileChange = {
       return false
     }
     if (!char.isRelease && !Common.cfg('charWikiLeak')) {
-      e.reply('角色尚未实装')
-      return true
+      return false
     }
     let level = dc.level || source.level || 90
     let promote = level === source.level ? source.promote : undefined
