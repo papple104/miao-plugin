@@ -52,7 +52,10 @@ class Weapon extends Base {
   }
 
   get isRelease () {
-    return this.eta ? this.eta * 1 < new Date() * 1 : true
+    if (this.eta) {
+      return this.eta * 1 < new Date() * 1
+    }
+    return true
   }
 
   getDetail () {

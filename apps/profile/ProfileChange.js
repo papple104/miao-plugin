@@ -132,7 +132,7 @@ const ProfileChange = {
       txt = lodash.trim(txt)
       if (txt) {
         let chars = Character.get(txt)
-        if (chars && (char.isRelease || Common.cfg('charWikiLeak'))) {
+        if (chars && (chars.isRelease || Common.cfg('charWikiLeak'))) {
           char.char = chars.id
         }
       }
