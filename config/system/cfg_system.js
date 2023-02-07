@@ -111,7 +111,9 @@ export const cfgSchema = {
       notReleasedData: {
         title: '未实装角色数据',
         key: '未实装',
-        def: true
+        def: false,
+        showDesc: true,
+        desc: '开启后才能查看未实装角色图鉴或换使用未实装内容换面板，数据仅供参考，请以游戏正式实装时为准'
       },
       charPic: {
         title: '角色图片',
