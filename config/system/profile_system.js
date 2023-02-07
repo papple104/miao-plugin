@@ -3,16 +3,6 @@
 * 如需自定义配置请复制修改上一级profile_default.js
 * */
 
-export const getProfileServ = ({ uid, serv, diyCfg }) => {
-  let { Miao, Enka } = serv
-  let token = diyCfg?.miaoApi?.token
-  let qq = diyCfg?.miaoApi?.qq
-  if (qq && token && token.length === 32 && !/^test/.test(token)) {
-    return Miao
-  }
-  return Enka
-}
-
 export const miaoApi = {
   listApi: ({ uid, diyCfg }) => {
     let qq = /\d{5,12}/.test(diyCfg.qq) ? diyCfg.qq : 'none'
@@ -25,11 +15,7 @@ export const enkaApi = {
   url: 'https://enka.network/',
   userAgent: 'Miao-Plugin/3.0',
   listApi: ({ url, uid, diyCfg }) => {
-    let api = `${url}u/${uid}/__data.json`
-    if (diyCfg?.apiKey) {
-      api += '?key=' + diyCfg.apiKey
-    }
-    return api
+    return `${url}api/uid/${uid}/`
   }
 }
 
