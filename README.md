@@ -21,7 +21,7 @@
 
 ---
 
-# Miao-Plugin说明
+# Miao-Plugin 说明
 
 Miao-Plugin 是一个 Yunzai-Bot 的升级插件，提供包括角色查询等升级功能。
 
@@ -45,9 +45,11 @@ git clone https://github.com/yoimiya-kokomi/miao-plugin.git ./plugins/miao-plugi
 pnpm add image-size -w
 ```
 
-进行安装。建议使用上述命令进行安装，以便于后续更新。 管理员发送`#喵喵更新`即可自动更新
+进行安装。安装完毕后，管理员只需发送 `#喵喵更新` 即可自动更新 miao-plugin。
 
-如果是手工下载的zip压缩包，请将解压后的miao-plugin文件夹（请删除压缩自带的-master后缀）放置在Yunzai目录下的plugins文件夹内。
+如果是手工下载的 zip 压缩包，请将解压后的 miao-plugin 文件夹（请删除压缩自带的-master后缀）放置在 Yunzai-Bot 目录下的 plugins 文件夹内。
+
+---
 
 ## Yunzai版本与支持
 
@@ -80,7 +82,7 @@ V2-Yunzai在较长一段时间内会维持更新，进行一些Bugfix及更新�
 
 ---
 
-# 功能说明
+## 功能说明
 
 ### #雷神面板
 
@@ -137,4 +139,3 @@ V2-Yunzai在较长一段时间内会维持更新，进行一些Bugfix及更新�
     * Yunzai-Bot 官方QQ群：213938015
     * 喵喵Miao-Plugin QQ群：607710456
 * [爱发电](https://afdian.net/@kokomi) 欢迎老板打赏，喵~
-
