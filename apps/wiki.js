@@ -21,4 +21,3 @@ app.reg({
 })
 
 export default app
-<<<<<<< HEAD

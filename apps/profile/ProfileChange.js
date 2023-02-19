@@ -2,8 +2,8 @@
  * 面板数据替换相关逻辑
  */
  import lodash from 'lodash'
- import { Profile, Data, Cfg } from '../../components/index.js'
- import { Character, ProfileData, Weapon } from '../../models/index.js'
+ import { Data } from '../../components/index.js'
+ import { Character, ProfileData, Weapon, Player } from '../../models/index.js'
  
  const keyMap = {
    artis: '圣遗物',
@@ -89,16 +89,16 @@
          let weapon = Weapon.get(weaponName)
          if (weapon || weaponName === '武器' || Weapon.isWeaponSet(weaponName)) {
            if (weapon.isRelease || Cfg.get('notReleasedData') === true) {
-             let affix = wRet[2] || wRet[3]
-             affix = { 一: 1, 二: 2, 三: 3, 四: 4, 五: 5, 满: 5 }[affix] || affix * 1
-             let tmp = {
-               weapon: (Weapon.isWeaponSet(weaponName) ? weaponName : weapon?.name) || '',
-               affix: affix || '',
-               level: wRet[1] * 1 || wRet[4] * 1 || ''
-             }
-             if (lodash.values(tmp).join('')) {
-               change.weapon = tmp
-             }
+            let affix = wRet[2] || wRet[3]
+            affix = { 一: 1, 二: 2, 三: 3, 四: 4, 五: 5, 满: 5 }[affix] || affix * 1
+            let tmp = {
+              weapon: (Weapon.isWeaponSet(weaponName) ? weaponName : weapon?.name) || '',
+              affix: affix || '',
+              level: wRet[1] * 1 || wRet[4] * 1 || ''
+            }
+            if (lodash.values(tmp).join('')) {
+              change.weapon = tmp
+            }
            }
            return true
          }
@@ -155,8 +155,9 @@
      if (!charid) {
        return false
      }
+     let player = Player.create(uid)
  
-     let source = Profile.get(uid, charid)
+     let source = player.getProfile(charid)
      let dc = ds.char || {}
      if (!source || !source.hasData) {
        source = {}
@@ -170,7 +171,7 @@
  
      let profiles = {}
      if (source && source.id) {
-       profiles[`${source.uid}:${source.id}`] = source
+       profiles[`${player.uid}:${source.id}`] = source
      }
      // 获取source
      let getSource = function (cfg) {
@@ -181,7 +182,8 @@
        let id = cfg.char || source.id
        let key = cuid + ':' + id
        if (!profiles[key]) {
-         profiles[key] = Profile.get(cuid, id) || {}
+         let cPlayer = Player.create(cuid)
+         profiles[key] = cPlayer.getProfile(id) || {}
        }
        return profiles[key]?.id ? profiles[key] : source
      }
@@ -195,7 +197,7 @@
        elem: char.elem,
        dataSource: 'change',
        promote
-     }, uid, false)
+     }, false)
  
      // 设置武器
      let wCfg = ds.weapon || {}
