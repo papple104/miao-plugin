@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
 import moment from 'moment'
 import { Character, Material } from '../../models/index.js'
-import { Data, Cfg } from '../../components/index.js'
+import { Common, Data, Cfg } from '../../components/index.js'
 import lodash from 'lodash'
 
 const ignoreIds = [495, // 有奖问卷调查开启！
@@ -216,8 +216,6 @@ let Cal = {
       data.chars = []
       charTalent[material.name] = data
     }, (ds) => ds.star === 4 && (week === 6 || ds.week === week % 3 + 1))
-    // papple: 日历不可以当小内鬼哦
-    let charType = Cfg.get('notReleasedData') === true ? 'official' : 'release'
     // 遍历角色数据
     Character.forEach((char) => {
       if (charBirth[char.birth] && (char.isRelease || char.birth !== '1-1')) {
@@ -229,7 +227,7 @@ let Cal = {
         data.weekly = char.getMaterials('weekly')?.icon
         charTalent[t].chars.push(data)
       }
-    }, charType)
+    }, Cfg.get('notReleasedData') ? 'official' : 'release')
     let charNum = 0
     lodash.forEach(charBirth, (charList) => {
       charNum = Math.max(charNum, charList.length)
@@ -399,6 +397,19 @@ let Cal = {
       nowTime: now.format('YYYY-MM-DD HH:mm'),
       nowDate: now.date()
     }
+  },
+
+  async render (e) {
+    let calData = await Cal.get()
+    let mode = 'calendar'
+    if (/(日历列表|活动)$/.test(e.msg)) {
+      mode = 'list'
+    }
+
+    return await Common.render('wiki/calendar', {
+      ...calData,
+      displayMode: mode
+    }, { e, scale: 1.1 })
   }
 }
 

@@ -1,13 +1,9 @@
-import { Character, ProfileRank, ProfileDmg, Avatar } from '../../models/index.js'
+import { Character, ProfileRank, ProfileDmg, Player } from '../../models/index.js'
 import { renderProfile } from './ProfileDetail.js'
-import { Data, Profile, Common, Format } from '../../components/index.js'
+import { Data, Common, Format } from '../../components/index.js'
 import lodash from 'lodash'
 
 export async function groupRank (e) {
-  let groupId = e.group_id
-  if (!groupId) {
-    return false
-  }
   const groupRank = Common.cfg('groupRank')
   let msg = e.original_msg || e.msg
   let type = ''
@@ -15,12 +11,15 @@ export async function groupRank (e) {
     type = 'list'
   } else if (/(最强|最高|最高分|最牛|第一)/.test(msg)) {
     type = 'detail'
+  } else if (/极限/.test(msg)) {
+    type = 'super'
   }
-  if (!type) {
+  let groupId = e.group_id
+  if (!type || (!groupId && type !== 'super')) {
     return false
   }
   let mode = /(分|圣遗物|评分|ACE)/.test(msg) ? 'mark' : 'dmg'
-  let name = msg.replace(/(#|最强|最高分|第一|最高|最牛|圣遗物|评分|群内|群|排名|排行|面板|面版|详情|榜)/g, '')
+  let name = msg.replace(/(#|最强|最高分|第一|极限|最高|最牛|圣遗物|评分|群内|群|排名|排行|面板|面版|详情|榜)/g, '')
   let char = Character.get(name)
   if (!char) {
     // 名字不存在或不为列表模式，则返回false
@@ -28,13 +27,24 @@ export async function groupRank (e) {
       return false
     }
   }
+  // 对鲸泽佬的极限角色文件增加支持
+  if (type === 'super') {
+    let player = Player.create(100000000)
+    if (player.getProfile(char.id)) {
+      e.uid = 100000000
+      return await renderProfile(e, char)
+    } else {
+      return true
+    }
+  }
+  // 正常群排名
   let groupCfg = await ProfileRank.getGroupCfg(groupId)
   if (!groupRank) {
-    e.reply('群面板排名功能已禁用，主人可通过【#喵喵设置】启用...')
+    e.reply('群面板排名功能已禁用，Bot主人可通过【#喵喵设置】启用...')
     return true
   }
   if (groupCfg.status === 1) {
-    e.reply('本群已关闭群排名，主人可通过【#启用排名】启用...')
+    e.reply('本群已关闭群排名，群管理员或Bot主人可通过【#启用排名】启用...')
     return true
   }
   if (type === 'detail') {
@@ -105,8 +115,8 @@ export async function refreshRank (e) {
   if (!groupId) {
     return true
   }
-  if (!e.isMaster) {
-    e.reply('只有管理员可刷新排名...')
+  if (!e.isMaster && !this.e.member?.is_admin) {
+    e.reply('只有主人及群管理员可刷新排名...')
     return true
   }
   e.reply('面板数据刷新中，等待时间可能较长，请耐心等待...')
@@ -115,7 +125,8 @@ export async function refreshRank (e) {
   let count = 0
   for (let qq in groupUids) {
     for (let { uid, type } of groupUids[qq]) {
-      let profiles = Profile.getAll(uid)
+      let player = new Player(uid)
+      let profiles = player.getProfiles()
       // 刷新rankLimit
       await ProfileRank.setUidInfo({ uid, profiles, qq, uidType: type })
       let rank = await ProfileRank.create({ groupId, uid, qq })
@@ -140,8 +151,8 @@ export async function manageRank (e) {
     return true
   }
   let isClose = /(关闭|禁用)/.test(e.msg)
-  if (!e.isMaster) {
-    e.reply(`只有管理员可${isClose ? '禁用' : '启用'}排名...`)
+  if (!e.isMaster && !this.e.member?.is_admin) {
+    e.reply(`只有主人及群管理员可${isClose ? '禁用' : '启用'}排名...`)
     return true
   }
   await ProfileRank.setGroupStatus(groupId, isClose ? 1 : 0)
@@ -156,13 +167,17 @@ async function renderCharRankList ({ e, uids, char, mode, groupId }) {
   let list = []
   for (let ds of uids) {
     let uid = ds.uid || ds.value
-    let profile = Profile.get(uid, ds.charId || char.id)
+    let player = Player.create(uid)
+    let avatar = player.getAvatar(ds.charId || char.id)
+    if (!avatar) {
+      continue
+    }
+    let profile = avatar.getProfile()
 
     if (profile) {
       let profileRank = await ProfileRank.create({ groupId, uid })
       let data = await profileRank.getRank(profile, true)
       let mark = data?.mark?.data
-      let avatar = new Avatar(profile, uid)
       let tmp = {
         uid,
         isMax: !char,
