@@ -150,16 +150,19 @@ const Wife = {
         if (lodash.intersection(['全部', '任意', '随机', '全都要'], wifeList).length > 0) {
           addRet = ['随机']
         } else {
+          let msgDaughter = ''
           wifeList = lodash.map(wifeList, (name) => {
             let char = Character.get(name)
           if (char && (targetCfg.type === -1 || char.checkWifeType(targetCfg.type))) {
               return char.name
+            } else if (targetCfg.type === 0 && char.checkWifeType(2)) {
+              msgDaughter = '\n不许炼铜！哼~设置成女儿还可以考虑...'
             }
           })
           wifeList = lodash.filter(lodash.uniq(wifeList), (d) => !!d)
           addRet = wifeList
           if (addRet.length === 0) {
-            e.reply(`在可选的${targetCfg.keyword[0]}列表中未能找到 ${actionParam} ~`)
+            e.reply(`在可选的${targetCfg.keyword[0]}列表中未能找到 ${actionParam} ~${msgDaughter}`)
             return true
           }
         }
