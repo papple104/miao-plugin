@@ -125,21 +125,24 @@ let ProfileDetail = {
     }
     char = profile.char || char
     let a = profile.attr
-    let c = Format.comma
-    let p = Format.pct
-    let attr = {
-      hp: c(a.hp),
-      hpPlus: c(a.hp - a.hpBase),
-      atk: c(a.atk),
-      atkPlus: c(a.atk - a.atkBase),
-      def: c(a.def),
-      defPlus: c(a.def - a.defBase),
-      cpct: p(a.cpct),
-      cdmg: p(a.cdmg),
-      mastery: c(a.mastery),
-      recharge: p(a.recharge),
-      dmg: p(Math.max(a.dmg * 1 || 0, a.phy * 1 || 0))
-    }
+    let base = profile.base
+    let attr = {}
+    lodash.forEach(['hp', 'def', 'atk', 'mastery'], (key) => {
+      let fn = (n) => Format.comma(n, key === 'hp' ? 0 : 1)
+      attr[key] = fn(a[key])
+      attr[`${key}Base`] = fn(base[key])
+      attr[`${key}Plus`] = fn(a[key] - base[key])
+    })
+    lodash.forEach(['cpct', 'cdmg', 'recharge', 'dmg'], (key) => {
+      let fn = Format.pct
+      let key2 = key
+      if (key === 'dmg' && a.phy > a.dmg) {
+        key2 = 'phy'
+      }
+      attr[key] = fn(a[key2])
+      attr[`${key}Base`] = fn(base[key2])
+      attr[`${key}Plus`] = fn(a[key2] - base[key2])
+    })
 
     let weapon = Weapon.get(profile.weapon.name)
     let w = profile.weapon
