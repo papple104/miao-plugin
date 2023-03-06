@@ -2,7 +2,7 @@
  * 面板数据替换相关逻辑
  */
  import lodash from 'lodash'
- import { Data } from '../../components/index.js'
+ import { Data, Cfg } from '../../components/index.js'
  import { Character, ProfileData, Weapon, Player } from '../../models/index.js'
  
  const keyMap = {
@@ -87,8 +87,7 @@
        if (wRet && wRet[5]) {
          let weaponName = lodash.trim(wRet[5])
          let weapon = Weapon.get(weaponName)
-         if (weapon || weaponName === '武器' || Weapon.isWeaponSet(weaponName)) {
-           if (weapon.isRelease || Cfg.get('notReleasedData') === true) {
+         if ((weapon && (weapon.isRelease || Cfg.get('notReleasedData') === true)) || weaponName === '武器' || Weapon.isWeaponSet(weaponName)) {
             let affix = wRet[2] || wRet[3]
             affix = { 一: 1, 二: 2, 三: 3, 四: 4, 五: 5, 满: 5 }[affix] || affix * 1
             let tmp = {
@@ -99,7 +98,6 @@
             if (lodash.values(tmp).join('')) {
               change.weapon = tmp
             }
-           }
            return true
          }
        }
