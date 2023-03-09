@@ -3,8 +3,8 @@
   src: url("./font/tttgbnumber.woff") format('woff'), url("./font/tttgbnumber.ttf") format('truetype');
 }
 @font-face {
-  font-family: 'NZBZ';
-  src: url("./font/NZBZ.woff") format('woff'), url("./font/NZBZ.ttf") format('truetype');
+  font-family: 'MaokenAssortedSans-Lite';
+  src: url("./font/MaokenAssortedSans-Lite.woff") format('woff'), url("./font/MaokenAssortedSans-Lite.ttf") format('truetype');
 }
 @font-face {
   font-family: 'YS';
@@ -13,8 +13,8 @@
 .font-YS {
   font-family: Number, "汉仪文黑-65W", YS, PingFangSC-Medium, "PingFang SC", sans-serif;
 }
-.font-NZBZ {
-  font-family: Number, "印品南征北战NZBZ体", NZBZ, "汉仪文黑-65W", YS, PingFangSC-Medium, "PingFang SC", sans-serif;
+.font-MaokenAssortedSans-Lite {
+  font-family: Number, "猫啃什锦黑-轻量版", MaokenAssortedSans-Lite, "汉仪文黑-65W", YS, PingFangSC-Medium, "PingFang SC", sans-serif;
 }
 * {
   margin: 0;
@@ -44,7 +44,7 @@ body {
   margin-top: 30px;
 }
 .head-box .title {
-  font-family: Number, "印品南征北战NZBZ体", NZBZ, "汉仪文黑-65W", YS, PingFangSC-Medium, "PingFang SC", sans-serif;
+  font-family: Number, "猫啃什锦黑-轻量版", MaokenAssortedSans-Lite, "汉仪文黑-65W", YS, PingFangSC-Medium, "PingFang SC", sans-serif;
   font-size: 36px;
   text-shadow: 0 0 1px #000, 1px 1px 3px rgba(0, 0, 0, 0.9);
 }
