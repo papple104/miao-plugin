@@ -23,6 +23,8 @@
 
 # Miao-Plugin 说明
 
+# Miao-Plugin 说明
+
 `miao-plugin`是一个`Yunzai-Bot`的升级插件，提供包括角色面板、角色查询等角色相关功能。
 
 具体功能可在安装插件后 通过 `#喵喵帮助` 进行查看。如需进行设置则可通过 `#喵喵设置` 命令进行管理。
@@ -59,7 +61,7 @@ pnpm install -P
 
 ## Yunzai版本与支持
 
-### V3-Yunzai
+`miao-plugin` 支持V3 / V2 版本的Yunzai-Bot
 
 * [Miao-Yunzai](https://github.com/yoimiya-kokomi/Miao-Yunzai) : 喵版Yunzai [Gitee](https://gitee.com/yoimiya-kokomi/Miao-Yunzai)
   / [Github](https://github.com/yoimiya-kokomi/Miao-Yunzai) ，本体不含签到功能，功能迭代较多，与miao-plugin打通，只建议新部署/迁移
@@ -126,4 +128,3 @@ pnpm install -P
     * Yunzai-Bot 官方QQ群：213938015
     * 喵喵Miao-Plugin QQ群：607710456
 * [爱发电](https://afdian.net/@kokomi) :欢迎老板打赏，喵~
-
