@@ -1,7 +1,6 @@
 import fs from 'fs'
 import { promisify } from 'util'
 import { pipeline } from 'stream'
-import { segment } from 'oicq'
 import MD5 from 'md5'
 import fetch from 'node-fetch'
 import lodash from 'lodash'
@@ -89,7 +88,7 @@ async function saveImages (e, name, imageMessages) {
   let path = resPath + pathSuffix
 
   if (!fs.existsSync(path)) {
-    Data.createDir(pathSuffix, resPath)
+    Data.createDir("resources/" + pathSuffix, 'miao')
   }
   let senderName = lodash.truncate(e.sender.card, { length: 8 })
   let imgCount = 0
