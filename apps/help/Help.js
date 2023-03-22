@@ -46,7 +46,7 @@ const Help = {
             return true;
           }
         }
-      } else {
+      } else if (diyCfg.helpCfg.group && diyCfg.helpCfg.group !== 'all') {
         if (!e.isMaster) {
           e.reply(`帮助${helpNo}在本群无效`);
           return true;
