@@ -55,7 +55,8 @@
      ret.char = char.id
      ret.mode = regRet[3] === '换' ? '面板' : regRet[3]
      ret.uid = regRet[1] || regRet[4] || ''
-     msg = regRet[5]
+     ret.game = char.game
+    msg = regRet[5]
  
      // 更换匹配
      msg = msg.replace(/[变改]/g, '换')
@@ -86,7 +87,7 @@
        let wRet = /^(?:等?级?([1-9][0-9])?级?)?\s*(?:([1-5一二三四五满])?精炼?([1-5一二三四五])?)?\s*(?:等?级?([1-9][0-9])?级?)?\s*(.*)$/.exec(txt)
        if (wRet && wRet[5]) {
          let weaponName = lodash.trim(wRet[5])
-         let weapon = Weapon.get(weaponName)
+         let weapon = Weapon.get(weaponName, ret.char.game)
          if ((weapon && (weapon.isRelease || Cfg.get('notReleasedData') === true)) || weaponName === '武器' || Weapon.isWeaponSet(weaponName)) {
             let affix = wRet[2] || wRet[3]
             affix = { 一: 1, 二: 2, 三: 3, 四: 4, 五: 5, 满: 5 }[affix] || affix * 1
@@ -147,13 +148,15 @@
     * @param uid
     * @param charid
     * @param ds
-    * @returns {ProfileData|boolean}
+    * @param game
+   * @returns {ProfileData|boolean}
     */
-   getProfile (uid, charid, ds) {
+   getProfile (uid, charid, ds, game = 'gs') {
      if (!charid) {
        return false
      }
-     let player = Player.create(uid)
+ 
+    let player = Player.create(uid, game)
  
      let source = player.getProfile(charid)
      let dc = ds.char || {}
@@ -180,7 +183,7 @@
        let id = cfg.char || source.id
        let key = cuid + ':' + id
        if (!profiles[key]) {
-         let cPlayer = Player.create(cuid)
+         let cPlayer = Player.create(cuid, game)
          profiles[key] = cPlayer.getProfile(id) || {}
        }
        return profiles[key]?.id ? profiles[key] : source
@@ -194,17 +197,21 @@
        fetter: source.fetter || 10,
        elem: char.elem,
        dataSource: 'change',
-       promote
-     }, false)
+       _source: 'change',
+      promote
+     }, char.game, false)
  
      // 设置武器
      let wCfg = ds.weapon || {}
      let wSource = getSource(wCfg).weapon || {}
-     let weapon = Weapon.get(wCfg?.weapon || wSource?.name || defWeapon[char.weaponType], char.weaponType)
-     if (!weapon || weapon.type !== char.weaponType) {
-       weapon = Weapon.get(defWeapon[char.weaponType])
+     let weapon = Weapon.get(wCfg?.weapon || wSource?.name || defWeapon[char.weaponType], char.game, char.weaponType)
+     if (char.isGs) {
+      if (!weapon || weapon.type !== char.weaponType) {
+         weapon = Weapon.get(defWeapon[char.weaponType], char.game)
+       }
      }
-     let wDs = {
+
+    let wDs = {
        name: weapon.name,
        star: weapon.star,
        level: Math.min(weapon.maxLv || 90, wCfg.level || wSource.level || 90)
