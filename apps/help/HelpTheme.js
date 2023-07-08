@@ -29,6 +29,7 @@ let HelpTheme = {
     return {
       main: `${resPath}${name}/main.png`,
       bg: fs.existsSync(`${dirPath}${name}/bg.jpg`) ? `${resPath}${name}/bg.jpg` : `${resPath}default/bg.jpg`,
+      icon: fs.existsSync(`${dirPath}${name}/icon.png`) ? `${resPath}${name}/icon.png` : null,
       style: (await Data.importModule(`resources/help/theme/${name}/config.js`, 'miao')).style || {}
     }
   },
@@ -47,6 +48,9 @@ let HelpTheme = {
     .container{background-image:url(${theme.main});${cover}width:${width}px;}
     .help-table .td,.help-table .th{width:${100 / colCount}%}
     `]
+    if (theme.icon) {
+      ret.push(`.help-icon{background-image: url("${theme.icon}") !important;}`)
+    }
     let css = function (sel, css, key, def, fn) {
       let val = Data.def(themeStyle[key], diyStyle[key], sysStyle[key], def)
       if (fn) {

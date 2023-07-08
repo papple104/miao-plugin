@@ -20,5 +20,7 @@ export const style = {
   // 帮助奇数行底色
   rowBgColor1: 'rgba(6, 21, 31, .2)',
   // 帮助偶数行底色
-  rowBgColor2: 'rgba(6, 21, 31, .35)'
+  rowBgColor2: 'rgba(6, 21, 31, .35)',
+  // 使用自定义icon文件
+  customIcon: false
 }

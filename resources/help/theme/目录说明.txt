@@ -9,6 +9,7 @@ default为默认皮肤，不建议改动，防止后续更新冲突
 main.png：主图，高度自适应
 bg.jpg：背景图，如果main.png图片不够高或存在透明的话则会使用bg.jpg作为背景进行填充
 config.js：当前皮肤元素的颜色、透明度等配置，可选。如无此文件会使用默认配置，如需自定义，可参考default/config.js
+icon.png：图标，可选。自定义图标参考resources/help/icon.png，必须保证每个图标长宽相等，且每10个图标一横排
 
 
 【皮肤选择】
