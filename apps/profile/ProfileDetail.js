@@ -133,6 +133,11 @@ let ProfileDetail = {
       return true
     }
 
+    if (!char.isRelease && Cfg.get('notReleasedData') === false) {
+      e.reply('未实装角色面板已禁用...')
+      return true
+    }
+
     let profile = e._profile || await getProfileRefresh(e, char.id)
     if (!profile) {
       return true
