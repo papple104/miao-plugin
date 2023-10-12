@@ -96,11 +96,12 @@ let ProfileDetail = {
       return true
     }
     if (!char.isRelease) {
-      // 预设面板咋了？
-      if (!profileChange) {
+      // 预设面板支持未实装角色
+      if (!profileChange && Number(e.uid) > 100000006) {
         e.reply('角色尚未实装')
         return true
       }
+      // 但仅在未实装开启时展示
       if (Cfg.get('notReleasedData') === false) {
         e.reply('未实装角色面板已禁用...')
         return true
