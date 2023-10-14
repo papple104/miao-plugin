@@ -1,61 +1,72 @@
 /**
  * 面板数据替换相关逻辑
  */
- import lodash from 'lodash'
- import { Data, Cfg } from '#miao'
- import { Character, ProfileData, Weapon, Player } from '#miao.models'
- 
- const keyMap = {
-   artis: '圣遗物',
-   arti1: '花',
-   arti2: '毛,羽,羽毛',
-   arti3: '沙,沙漏,表',
-   arti4: '杯,杯子',
-   arti5: '头,冠',
-   weapon: '武器'
- }
- let keyTitleMap = {}
- lodash.forEach(keyMap, (val, key) => {
-   lodash.forEach(val.split(','), (v) => {
-     keyTitleMap[v] = key
-   })
- })
- const keyReg = new RegExp(`^(\\d{9})?\\s*(.+?)\\s*(\\d{9})?\\s*((?:${lodash.keys(keyTitleMap).join('|')}|\\+)+)$`)
- // 默认武器
- let defWeapon = {
-   bow: '西风猎弓',
-   catalyst: '西风秘典',
-   claymore: '西风大剑',
-   polearm: '西风长枪',
-   sword: '西风剑'
- }
- 
- const ProfileChange = {
-   /**
-    * 匹配消息
-    * @param msg
-    * @returns {{}}
-    */
-   matchMsg (msg) {
-     if (!/(变|改|换)/.test(msg)) {
-       return false
-     }
-     msg = msg.toLowerCase().replace(/uid ?:? ?/, '')
-     let regRet = /^#*(\d{9})?(.+?)(详细|详情|面板|面版|圣遗物|伤害[1-7]?)?\s*(\d{9})?[变换改](.+)/.exec(msg)
-     if (!regRet || !regRet[2]) {
-       return false
-     }
- 
-     let ret = {}
-     let change = {}
-     let char = Character.get(lodash.trim(regRet[2]))
-     if (!char) {
-       return false
-     }
-     ret.char = char.id
-     ret.mode = regRet[3] === '换' ? '面板' : regRet[3]
-     ret.uid = regRet[1] || regRet[4] || ''
-     ret.game = char.game
+import lodash from 'lodash'
+import { Data } from '#miao'
+import { Character, ArtifactSet, ProfileData, Weapon, Player } from '#miao.models'
+
+// 默认武器
+let defWeapon = {
+  bow: '西风猎弓',
+  catalyst: '西风秘典',
+  claymore: '西风大剑',
+  polearm: '西风长枪',
+  sword: '西风剑'
+}
+
+const ProfileChange = {
+  /**
+   * 匹配消息
+   * @param msg
+   * @returns {{}}
+   */
+  matchMsg (msg) {
+    if (!/(变|改|换)/.test(msg)) {
+      return false
+    }
+    msg = msg.toLowerCase().replace(/uid ?:? ?/, '').replace('', '')
+    let regRet = /^#*(\d{9})?(.+?)(详细|详情|面板|面版|圣遗物|伤害[1-7]?)?\s*(\d{9})?[变换改](.+)/.exec(msg)
+    if (!regRet || !regRet[2]) {
+      return false
+    }
+    let ret = {}
+    let change = {}
+    let char = Character.get(lodash.trim(regRet[2]).replace('星铁', ''))
+    if (!char) {
+      return false
+    }
+    const game = char.game
+    const isGs = game === 'gs'
+    const keyMap = isGs ? {
+      artis: '圣遗物',
+      arti1: '花,生之花',
+      arti2: '毛,羽,羽毛,死之羽',
+      arti3: '沙,沙漏,表,时之沙',
+      arti4: '杯,杯子,空之杯',
+      arti5: '头,冠,理之冠,礼冠,帽子,帽',
+      weapon: '武器'
+    } : {
+      artis: '圣遗物,遗器',
+      arti1: '头,帽子,头部',
+      arti2: '手,手套,手部',
+      arti3: '衣,衣服,甲,躯干,',
+      arti4: '鞋,靴,鞋子,靴子,脚,脚部',
+      arti5: '球,位面球',
+      artis6: '绳,线,链接绳,连接绳',
+      weapon: '武器,光锥'
+    }
+    let keyTitleMap = {}
+    lodash.forEach(keyMap, (val, key) => {
+      lodash.forEach(val.split(','), (v) => {
+        keyTitleMap[v] = key
+      })
+    })
+    const keyReg = new RegExp(`^(\\d{9})?\\s*(.+?)\\s*(\\d{9})?\\s*((?:${lodash.keys(keyTitleMap).join('|')}|\\+)+)$`)
+
+    ret.char = char.id
+    ret.mode = regRet[3] === '换' ? '面板' : regRet[3]
+    ret.uid = regRet[1] || regRet[4] || ''
+    ret.game = char.game
     msg = regRet[5]
 
     // 更换匹配
@@ -117,7 +128,7 @@
       if (wRet && wRet[5]) {
         let weaponName = lodash.trim(wRet[5])
         let weapon = Weapon.get(weaponName, game, ret.char.game)
-        if (weapon || weaponName === '武器' || Weapon.isWeaponSet(weaponName)) {
+        if (weapon && (weapon.isRelease || Cfg.get('notReleasedData') === true) || weaponName === '武器' || Weapon.isWeaponSet(weaponName)) {
           let affix = wRet[2] || wRet[3]
           affix = { 一: 1, 二: 2, 三: 3, 四: 4, 五: 5, 满: 5 }[affix] || affix * 1
           let tmp = {
@@ -178,12 +189,12 @@
    * @param ds
    * @param game
    * @returns {ProfileData|boolean}
-    */
-   getProfile (uid, charid, ds, game = 'gs') {
-     if (!charid) {
-       return false
-     }
- 
+   */
+  getProfile (uid, charid, ds, game = 'gs') {
+    if (!charid) {
+      return false
+    }
+
     const isGs = game === 'gs'
 
     let player = Player.create(uid, game)
@@ -239,9 +250,9 @@
     let weapon = Weapon.get(wCfg?.weapon || wSource?.name || defWeapon[char.weaponType], char.game, char.weaponType)
     if (char.isGs) {
       if (!weapon || weapon.type !== char.weaponType) {
-         weapon = Weapon.get(defWeapon[char.weaponType], char.game)
-       }
-     }
+        weapon = Weapon.get(defWeapon[char.weaponType], char.game)
+      }
+    }
 
     let wDs = {
       name: weapon.name,
