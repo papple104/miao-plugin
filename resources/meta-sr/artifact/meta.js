@@ -141,3 +141,5 @@ lodash.forEach(aliasCfg, (txt, name) => {
   alias[name] = name
 })
 export const aliasMap = alias
+// 未实装遗器列表，填入全称
+export const notReleased = []

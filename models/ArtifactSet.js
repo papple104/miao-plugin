@@ -3,10 +3,11 @@
 * */
 import lodash from 'lodash'
 import Base from './Base.js'
-import { abbr, aliasMap, artiMap, artiSetMap, calc as artisBuffs } from '../resources/meta/artifact/index.js'
+import { abbr, aliasMap, notReleased, artiMap, artiSetMap, calc as artisBuffs } from '../resources/meta/artifact/index.js'
 import {
   abbr as abbrSR,
   aliasMap as aliasMapSR,
+  notReleased as notReleasedSR,
   artiMap as artiMapSR,
   artisBuffs as artisBuffsSR,
   artiSetMap as artiSetMapSR
@@ -90,6 +91,10 @@ class ArtifactSet extends Base {
 
   static getAliasMap (game = 'gs') {
     return game === 'gs' ? aliasMap : aliasMapSR
+  }
+
+  static getNotReleased (game = 'gs', name) {
+    return game === 'gs' ? lodash.includes(notReleased, name) : lodash.includes(notReleasedSR, name)
   }
 }
 

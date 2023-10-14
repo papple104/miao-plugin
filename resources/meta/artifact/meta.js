@@ -101,6 +101,8 @@ lodash.forEach(aliasCfg, (txt, name) => {
   alias[name] = name
 })
 export const aliasMap = alias
+// 未实装圣遗物列表，填入全称
+export const notReleased = []
 
 export const mainAttr = {
   3: 'atk,def,hp,mastery,recharge'.split(','),

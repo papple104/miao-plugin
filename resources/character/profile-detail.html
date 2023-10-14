@@ -105,7 +105,7 @@
   {{if changeProfile}}
   <div class="cont">
     <div class="cont-footer dmg-desc">
-      <strong>该面板为非实际数据。当前替换命令：</strong> {{changeProfile}}
+      <strong>该面板为非实际数据{{if !notReleasedData}}，已过滤未实装内容{{/if}}。当前替换命令：</strong> {{changeProfile}}
     </div>
   </div>
   {{/if}}

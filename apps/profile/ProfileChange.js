@@ -2,7 +2,7 @@
  * 面板数据替换相关逻辑
  */
 import lodash from 'lodash'
-import { Data } from '#miao'
+import { Data, Cfg } from '#miao'
 import { Character, ArtifactSet, ProfileData, Weapon, Player } from '#miao.models'
 
 // 默认武器
@@ -32,6 +32,7 @@ const ProfileChange = {
     let ret = {}
     let change = {}
     let char = Character.get(lodash.trim(regRet[2]).replace('星铁', ''))
+    let hasNotReleasedData = false
     if (!char) {
       return false
     }
@@ -103,24 +104,36 @@ const ProfileChange = {
       let asKey = lodash.keys(asMap).sort((a, b) => b.length - a.length).join('|')
       let asReg = new RegExp(`^(${asKey})套?[2,4]?\\+?(${asKey})?套?[2,4]?\\+?(${asKey})?套?[2,4]?$`)
       let asRet = asReg.exec(txt)
+      let asRel = true
       if (asRet && asRet[1] && asMap[asRet[1]]) {
-        if (game === 'gs') {
-          change.artisSet = [asMap[asRet[1]], asMap?.[asRet[2]] || asMap[asRet[1]]]
-        } else if (game === 'sr') {
-          for (let idx = 1; idx <= 3; idx++) {
-            let as = ArtifactSet.get(asMap?.[asRet[idx]])
-            if (as) { // 球&绳
-              change.artisSet = change.artisSet || []
-              let ca = change.artisSet
-              ca[as.sets?.[1] ? (ca[0] ? 1 : 0) : 2] = as.name
+        if (Cfg.get('notReleasedData') === false) {
+          for (let ret of asRet) {
+            asRel = !ArtifactSet.getNotReleased(game, asMap[ret])
+            if (!asRel) {
+              hasNotReleasedData = true
+              return true
             }
           }
-          let ca = change.artisSet
-          if (ca && ca[0] && !ca[1]) {
-            ca[1] = ca[0]
-          }
         }
-        return true
+        if (asRel) {
+          if (game === 'gs') {
+            change.artisSet = [asMap[asRet[1]], asMap?.[asRet[2]] || asMap[asRet[1]]]
+          } else if (game === 'sr') {
+            for (let idx = 1; idx <= 3; idx++) {
+              let as = ArtifactSet.get(asMap?.[asRet[idx]])
+              if (as) { // 球&绳
+                change.artisSet = change.artisSet || []
+                let ca = change.artisSet
+                ca[as.sets?.[1] ? (ca[0] ? 1 : 0) : 2] = as.name
+              }
+            }
+            let ca = change.artisSet
+            if (ca && ca[0] && !ca[1]) {
+              ca[1] = ca[0]
+            }
+          }
+          return true
+        }
       }
 
       // 匹配武器
@@ -128,7 +141,11 @@ const ProfileChange = {
       if (wRet && wRet[5]) {
         let weaponName = lodash.trim(wRet[5])
         let weapon = Weapon.get(weaponName, game, ret.char.game)
-        if (weapon && (weapon.isRelease || Cfg.get('notReleasedData') === true) || weaponName === '武器' || Weapon.isWeaponSet(weaponName)) {
+        if (weapon && !weapon.isRelease || Cfg.get('notReleasedData') === false) {
+          hasNotReleasedData = true
+          return true
+        }
+        if (weapon || weaponName === '武器' || Weapon.isWeaponSet(weaponName)) {
           let affix = wRet[2] || wRet[3]
           affix = { 一: 1, 二: 2, 三: 3, 四: 4, 五: 5, 满: 5 }[affix] || affix * 1
           let tmp = {
@@ -179,6 +196,7 @@ const ProfileChange = {
       }
     })
     ret.change = lodash.isEmpty(change) ? false : change
+    ret.hasNotReleasedData = hasNotReleasedData
     return ret
   },
 

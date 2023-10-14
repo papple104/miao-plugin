@@ -24,6 +24,11 @@ let ProfileDetail = {
     let changeMsg = msg
     let pc = ProfileChange.matchMsg(msg)
 
+    if (pc && pc.hasNotReleasedData) {
+      e.reply('未实装内容换面板已禁用...')
+      return true
+    }
+
     if (pc && pc.char && pc.change) {
       if (!Cfg.get('profileChange')) {
         e.reply('面板替换功能已禁用...')
@@ -235,7 +240,8 @@ let ProfileDetail = {
       bodyClass: `char-${char.name}`,
       mode,
       wCfg,
-      changeProfile: e._profileMsg
+      changeProfile: e._profileMsg,
+      notReleasedData: Cfg.get('notReleasedData')
     }
     // 渲染图像
     let msgRes = await Common.render('character/profile-detail', renderData, { e, scale: 1.6, retMsgId: true })
