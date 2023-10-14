@@ -23,16 +23,15 @@ let ProfileDetail = {
     let profileChange = false
     let changeMsg = msg
     let pc = ProfileChange.matchMsg(msg)
+
     if (pc && pc.char && pc.change) {
       if (!Cfg.get('profileChange')) {
         e.reply('面板替换功能已禁用...')
         return true
       }
-      if (pc.game === 'sr') {
-        e.reply('星铁面板暂不支持面板替换，请等待后续升级...')
-        return true
-      }
-      e.uid = pc.uid || e.runtime.uid
+      e.game = pc.game
+      e.isSr = e.game === 'sr'
+      e.uid = pc.uid || await getTargetUid(e)
       profileChange = ProfileChange.getProfile(e.uid, pc.char, pc.change, pc.game)
       if (profileChange && profileChange.char) {
         msg = `#${profileChange.char?.name}${pc.mode || '面板'}`
