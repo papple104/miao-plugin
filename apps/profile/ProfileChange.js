@@ -141,7 +141,7 @@ const ProfileChange = {
       if (wRet && wRet[5]) {
         let weaponName = lodash.trim(wRet[5])
         let weapon = Weapon.get(weaponName, game, ret.char.game)
-        if (weapon && !weapon.isRelease || Cfg.get('notReleasedData') === false) {
+        if (weapon && (!weapon.isRelease || Cfg.get('notReleasedData') === false)) {
           hasNotReleasedData = true
           return true
         }
