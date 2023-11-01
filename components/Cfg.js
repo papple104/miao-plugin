@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs from 'node:fs'
 import lodash from 'lodash'
 import cfgData from './cfg/CfgData.js'
 import { Version } from '#miao'
@@ -22,11 +22,12 @@ try {
 }
 
 let Cfg = {
-  get (rote) {
+  get (rote, def = '') {
     if (Version.isMiao && miaoCfg[rote]) {
       return true
     }
-    return lodash.get(cfg, rote)
+    let ret = lodash.get(cfg, rote)
+    return lodash.isUndefined(cfg) ? def : ret
   },
   set (rote, val) {
     cfg[rote] = val

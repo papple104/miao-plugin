@@ -2,8 +2,8 @@
  * 面板数据替换相关逻辑
  */
 import lodash from 'lodash'
-import { Data, Cfg } from '#miao'
-import { Character, ArtifactSet, ProfileData, Weapon, Player } from '#miao.models'
+import { Data, Cfg, Meta } from '#miao'
+import { Character, ArtifactSet, Avatar, Weapon, Player } from '#miao.models'
 
 // 默认武器
 let defWeapon = {
@@ -100,12 +100,16 @@ const ProfileChange = {
       }
 
       // 匹配圣遗物套装
-      let asMap = ArtifactSet.getAliasMap(game)
-      let asKey = lodash.keys(asMap).sort((a, b) => b.length - a.length).join('|')
+      let asMap = Meta.getAlias(game, 'artiSet')
+      let asKey = asMap.sort((a, b) => b.length - a.length).join('|')
       let asReg = new RegExp(`^(${asKey})套?[2,4]?\\+?(${asKey})?套?[2,4]?\\+?(${asKey})?套?[2,4]?$`)
       let asRet = asReg.exec(txt)
+      let getSet = (idx) => {
+        let set = ArtifactSet.get(asRet[idx])
+        return set ? set.name : false
+      }
       let asRel = true
-      if (asRet && asRet[1] && asMap[asRet[1]]) {
+      if (asRet && asRet[1] && getSet(1)) {
         if (Cfg.get('notReleasedData') === false) {
           for (let ret of asRet) {
             asRel = !ArtifactSet.getNotReleased(game, asMap[ret])
@@ -117,10 +121,10 @@ const ProfileChange = {
         }
         if (asRel) {
           if (game === 'gs') {
-            change.artisSet = [asMap[asRet[1]], asMap?.[asRet[2]] || asMap[asRet[1]]]
+            change.artisSet = [getSet(1), getSet(2) || getSet(1)]
           } else if (game === 'sr') {
             for (let idx = 1; idx <= 3; idx++) {
-              let as = ArtifactSet.get(asMap?.[asRet[idx]])
+              let as = ArtifactSet.get(asRet[idx])
               if (as) { // 球&绳
                 change.artisSet = change.artisSet || []
                 let ca = change.artisSet
@@ -134,6 +138,7 @@ const ProfileChange = {
           }
           return true
         }
+      }
       }
 
       // 匹配武器
@@ -206,7 +211,7 @@ const ProfileChange = {
    * @param charid
    * @param ds
    * @param game
-   * @returns {ProfileData|boolean}
+   * @returns {Avatar|boolean}
    */
   getProfile (uid, charid, ds, game = 'gs') {
     if (!charid) {
@@ -249,7 +254,7 @@ const ProfileChange = {
       return profiles[key]?.id ? profiles[key] : source
     }
     // 初始化profile
-    let ret = new ProfileData({
+    let ret = new Avatar({
       uid,
       id: char.id,
       level,
@@ -260,7 +265,7 @@ const ProfileChange = {
       _source: 'change',
       promote,
       trees: lodash.extend([], source.trees)
-    }, char.game, false)
+    }, char.game)
 
     // 设置武器
     let wCfg = ds.weapon || {}
@@ -291,7 +296,7 @@ const ProfileChange = {
     }
 
     // 设置圣遗物
-    let artis = getSource(ds.artis)?.artis?.artis || {}
+    let artis = getSource(ds.artis)?.artis?.toJSON() || {}
     for (let idx = 1; idx <= (isGs ? 5 : 6); idx++) {
       if (ds['arti' + idx]) {
         let source = getSource(ds['arti' + idx])
@@ -304,8 +309,8 @@ const ProfileChange = {
         let as = ArtifactSet.get(ds.artisSet[artisIdx], game)
         if (as) {
           artis[idx].id = as.getArti(idx)?.getIdByStar(artis[idx].star || 5)
-          artis[idx]._name = artis[idx].name = as.getArtiName(idx)
-          artis[idx]._set = artis[idx].set = as.name
+          artis[idx].name = as.getArtiName(idx)
+          artis[idx].set = as.name
         }
       }
     }
