@@ -52,4 +52,3 @@ lodash.forEach(attrMap, (attr, key) => {
 })
 
 export { attrMap }
-<<<<<<< HEAD

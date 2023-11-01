@@ -20,7 +20,6 @@ class Weapon extends Base {
     this.meta = meta
     this.type = meta.type
     this.star = meta.star
-    this.eta  = meta.eta
     this.game = game
     return this._cache()
   }
@@ -80,9 +79,6 @@ class Weapon extends Base {
   }
 
   get isRelease () {
-    if (this.eta) {
-      return this.eta * 1 < new Date() * 1
-    }
     return true
   }
 

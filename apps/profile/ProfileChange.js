@@ -32,7 +32,6 @@ const ProfileChange = {
     let ret = {}
     let change = {}
     let char = Character.get(lodash.trim(regRet[2]).replace('星铁', ''))
-    let hasNotReleasedData = false
     if (!char) {
       return false
     }
@@ -108,37 +107,39 @@ const ProfileChange = {
         let set = ArtifactSet.get(asRet[idx])
         return set ? set.name : false
       }
-      let asRel = true
       if (asRet && asRet[1] && getSet(1)) {
         if (Cfg.get('notReleasedData') === false) {
-          for (let ret of asRet) {
-            asRel = !ArtifactSet.getNotReleased(game, asMap[ret])
-            if (!asRel) {
-              hasNotReleasedData = true
-              return true
+          let notReleased = false
+          for (let idx = 1; idx <= 3; idx++) {
+            let as = ArtifactSet.get(asRet[idx], game)
+            if (!as) {
+              continue
+            }
+            if (lodash.includes(notReleasedName[game], as.name)) {
+              notReleased = true
             }
           }
+          if (notReleased) {
+            return true
+          }
         }
-        if (asRel) {
-          if (game === 'gs') {
-            change.artisSet = [getSet(1), getSet(2) || getSet(1)]
-          } else if (game === 'sr') {
-            for (let idx = 1; idx <= 3; idx++) {
-              let as = ArtifactSet.get(asRet[idx])
-              if (as) { // 球&绳
-                change.artisSet = change.artisSet || []
-                let ca = change.artisSet
-                ca[as.sets?.[1] ? (ca[0] ? 1 : 0) : 2] = as.name
-              }
-            }
-            let ca = change.artisSet
-            if (ca && ca[0] && !ca[1]) {
-              ca[1] = ca[0]
+        if (game === 'gs') {
+          change.artisSet = [getSet(1), getSet(2) || getSet(1)]
+        } else if (game === 'sr') {
+          for (let idx = 1; idx <= 3; idx++) {
+            let as = ArtifactSet.get(asRet[idx], game)
+            if (as) { // 球&绳
+              change.artisSet = change.artisSet || []
+              let ca = change.artisSet
+              ca[as.sets?.[1] ? (ca[0] ? 1 : 0) : 2] = as.name
             }
           }
-          return true
+          let ca = change.artisSet
+          if (ca && ca[0] && !ca[1]) {
+            ca[1] = ca[0]
+          }
         }
-      }
+        return true
       }
 
       // 匹配武器
@@ -146,8 +147,7 @@ const ProfileChange = {
       if (wRet && wRet[5]) {
         let weaponName = lodash.trim(wRet[5])
         let weapon = Weapon.get(weaponName, game, ret.char.game)
-        if (weapon && (!weapon.isRelease && Cfg.get('notReleasedData') === false)) {
-          hasNotReleasedData = true
+        if (weapon && (Cfg.get('notReleasedData') === false && lodash.includes(notReleasedName[game], weapon.name))) {
           return true
         }
         if (weapon || weaponName === '武器' || Weapon.isWeaponSet(weaponName)) {
@@ -201,7 +201,6 @@ const ProfileChange = {
       }
     })
     ret.change = lodash.isEmpty(change) ? false : change
-    ret.hasNotReleasedData = hasNotReleasedData
     return ret
   },
 
@@ -319,4 +318,10 @@ const ProfileChange = {
     return ret
   }
 }
+
+let notReleasedName = {
+  gs: ['静水流涌之辉'],
+  sr: []
+}
+
 export default ProfileChange

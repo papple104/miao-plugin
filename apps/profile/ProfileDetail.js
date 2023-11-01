@@ -24,11 +24,6 @@ let ProfileDetail = {
     let changeMsg = msg
     let pc = ProfileChange.matchMsg(msg)
 
-    if (pc && pc.hasNotReleasedData) {
-      e.reply('未实装内容换面板已禁用...')
-      return true
-    }
-
     if (pc && pc.char && pc.change) {
       if (!Cfg.get('profileChange')) {
         e.reply('面板替换功能已禁用...')

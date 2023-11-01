@@ -80,14 +80,6 @@ class ArtifactSet extends Base {
   getArti (idx = 1) {
     return Artifact.get(this.getArtiName(idx), this.game)
   }
-
-  static getAliasMap (game = 'gs') {
-    return game === 'gs' ? aliasMap : aliasMapSR
-  }
-
-  static getNotReleased (game = 'gs', name) {
-    return game === 'gs' ? lodash.includes(notReleased, name) : lodash.includes(notReleasedSR, name)
-  }
 }
 
 export default ArtifactSet
