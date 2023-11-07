@@ -320,7 +320,7 @@ const ProfileChange = {
 }
 
 let notReleasedName = {
-  gs: ['静水流涌之辉'],
+  gs: [],
   sr: []
 }
 
