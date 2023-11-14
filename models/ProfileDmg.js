@@ -85,7 +85,11 @@ export default class ProfileDmg extends Base {
   }
 
   async getCalcRule () {
-    const cfgPath = ProfileDmg.dmgRulePath(this.char?.name, this.char?.game)
+    let ruleName = this.char?.name
+    if (['空', '荧'].includes(ruleName)) {
+      ruleName = `旅行者/${this.profile.elem}`
+    }
+    const cfgPath = ProfileDmg.dmgRulePath(ruleName, this.char?.game)
     let cfg = {}
     if (cfgPath) {
       cfg = await import(`file://${cfgPath.path}`)
@@ -137,7 +141,7 @@ export default class ProfileDmg extends Base {
 
     buffs = this.getBuffs(buffs)
 
-    let { msg } = DmgAttr.calcAttr({ originalAttr, buffs, meta, params: defParams || {} })
+    let { msg } = DmgAttr.calcAttr({ originalAttr, buffs, meta, params: defParams || {}, game })
     let msgList = []
 
     let ret = []
@@ -172,7 +176,7 @@ export default class ProfileDmg extends Base {
         detail = detail({ ...ds, attr, profile })
       }
       let params = lodash.merge({}, defParams, detail?.params || {})
-      let { attr, msg } = DmgAttr.calcAttr({ originalAttr, buffs, meta, params, talent: detail.talent || '' })
+      let { attr, msg } = DmgAttr.calcAttr({ originalAttr, buffs, meta, params, talent: detail.talent || '', game })
       if (detail.isStatic) {
         return
       }
