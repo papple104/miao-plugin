@@ -323,7 +323,7 @@ const ProfileChange = {
 }
 
 let notReleasedName = {
-  gs: [],
+  gs: ['回声之林夜话', '昔时之歌', '「究极霸王超级魔剑」', '裁断', '石英大剑'],
   sr: []
 }
 
