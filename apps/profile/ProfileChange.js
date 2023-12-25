@@ -323,7 +323,7 @@ const ProfileChange = {
 }
 
 let notReleasedName = {
-  gs: ['「究极霸王超级魔剑」'],
+  gs: [],
   sr: []
 }
 
