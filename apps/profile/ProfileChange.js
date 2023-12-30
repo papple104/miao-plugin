@@ -323,7 +323,7 @@ const ProfileChange = {
 }
 
 let notReleasedName = {
-  gs: [],
+  gs: ['鹤鸣余音'],
   sr: []
 }
 
