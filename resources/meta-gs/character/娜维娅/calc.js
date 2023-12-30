@@ -9,14 +9,6 @@ export const details = [{
   params: { jp: 3 },
   dmg: ({ talent }, dmg) => dmg(talent.e['玫瑰晶弹基础伤害'] * 2 , 'e')
 },{
-  title: '4消耗典仪式晶火',
-  params: { jp: 4 },
-  dmg: ({ talent }, dmg) => dmg(talent.e['玫瑰晶弹基础伤害'] * 2 , 'e')
-},{
-  title: '5消耗典仪式晶火',
-  params: { jp: 5 },
-  dmg: ({ talent }, dmg) => dmg(talent.e['玫瑰晶弹基础伤害'] * 2 , 'e')
-},{
   title: '6消耗典仪式晶火',
   params: { jp: 6 },
   dmg: ({ talent }, dmg) => dmg(talent.e['玫瑰晶弹基础伤害'] * 2 , 'e')
@@ -28,7 +20,7 @@ export const details = [{
   dmg: ({ talent }, dmg) => dmg(talent.q['支援炮击伤害'], 'q')
 }]
 
-export const defDmgIdx = 5
+export const defDmgIdx = 3
 export const mainAttr = 'atk,cpct,cdmg'
 
 export const buffs = [{

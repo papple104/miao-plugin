@@ -49,6 +49,7 @@ let Data = {
       try {
         return JSON.parse(fs.readFileSync(`${root}/${file}`, 'utf8'))
       } catch (e) {
+        console.error(`JSON数据错误: ${root}/${file}`)
         console.log(e)
       }
     }
@@ -135,6 +136,7 @@ let Data = {
         let data = await import(`file://${root}/${file}?t=${new Date() * 1}`)
         return data || {}
       } catch (e) {
+        console.error(`import module错误: ${root}/${file}`)
         console.log(e)
       }
     }
@@ -277,7 +279,7 @@ let Data = {
     }
   },
 
-  isPromise(data){
+  isPromise (data) {
     return util.types.isPromise(data)
   },
 
