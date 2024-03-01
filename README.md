@@ -3,7 +3,8 @@
 自用魔改版，相比原版有以下区别：
 
 * 补充`#喵喵设置未实装关闭`的遗漏部分，同时对应配置项改为默认关闭
-    * `#喵喵设置未实装关闭`于23/2/7更新中正式使用，我永远单推喵喵
+    * `apps\profile\ProfileChange.js`：未实装武器/光锥/圣遗物/遗器等
+    * `resources\meta-sr\character\data.json`：铁道未实装角色
 * 调用多页帮助
     * 复制config/help_default.js为config/help1.js（数字可取1-999999999）之后，在原来的帮助指令后加对应编号获取帮助
     * 例：`#帮助1` 读取config/help1.js并获取帮助
