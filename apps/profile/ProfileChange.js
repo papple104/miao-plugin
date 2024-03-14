@@ -323,7 +323,7 @@ const ProfileChange = {
 }
 
 let notReleasedName = {
-  gs: ['有乐御簾切', '沙中伟贤的对答'],
+  gs: [],
   sr: []
 }
 
