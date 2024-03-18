@@ -18,10 +18,12 @@
     * 为true时，可以为皮肤使用新的icon组图片
 * 新增 `#后宫` `#后宫设置心海`
     * 设置后宫无分类限制，可选任意已有角色
-* 使用[猫啃什锦黑](https://github.com/Skr-ZERO/MaokenAssortedSans)替换插件中使用NZBZ字体的部分
+* 部分内容字体替换
+    * 标题文字：[猫啃什锦黑](https://github.com/Skr-ZERO/MaokenAssortedSans)
+    * 符号、数字：没找到合适的，不换了
 * 去掉在某些情况下可能出现的引流信息
 
-以下为原README内容：
+以下为原作者README内容：
 
 ---
 
