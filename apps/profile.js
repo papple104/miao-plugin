@@ -66,7 +66,7 @@ app.reg({
   artisList: {
     name: '面板圣遗物列表',
     fn: profileArtisList,
-    rule: /^#圣遗物列表\s*(\d{9,10})?$/
+    rule: /^#(星铁|原神)?(圣遗物|遗器)列表\s*(\d{9,10})?$/
   },
 
   profileStat: {
@@ -142,7 +142,7 @@ app.reg({
     name: '删除面板',
     describe: '【#角色】 删除游戏橱窗详情数据',
     fn: ProfileList.del,
-    rule: /^#(删除全部面板|删除面板|删除面板数据)\s*(\d{9,10})?$/
+    rule: /^#(星铁|原神)?(删除全部面板|删除面板|删除面板数据)\s*(\d{9,10})?$/
   },
 
   profileReload: {
