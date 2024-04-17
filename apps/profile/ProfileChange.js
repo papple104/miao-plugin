@@ -40,24 +40,24 @@ const ProfileChange = {
     const isGs = game === 'gs'
     const keyMap = isGs
       ? {
-        artis: '圣遗物',
-        arti1: '花,生之花',
-        arti2: '毛,羽,羽毛,死之羽',
-        arti3: '沙,沙漏,表,时之沙',
-        arti4: '杯,杯子,空之杯',
-        arti5: '头,冠,理之冠,礼冠,帽子,帽',
-        weapon: '武器'
-      }
+          artis: '圣遗物',
+          arti1: '花,生之花',
+          arti2: '毛,羽,羽毛,死之羽',
+          arti3: '沙,沙漏,表,时之沙',
+          arti4: '杯,杯子,空之杯',
+          arti5: '头,冠,理之冠,礼冠,帽子,帽',
+          weapon: '武器'
+        }
       : {
-        artis: '圣遗物,遗器',
-        arti1: '头,帽子,头部',
-        arti2: '手,手套,手部',
-        arti3: '衣,衣服,甲,躯干,',
-        arti4: '鞋,靴,鞋子,靴子,脚,脚部',
-        arti5: '球,位面球',
-        arti6: '绳,线,链接绳,连接绳',
-        weapon: '武器,光锥'
-      }
+          artis: '圣遗物,遗器',
+          arti1: '头,帽子,头部',
+          arti2: '手,手套,手部',
+          arti3: '衣,衣服,甲,躯干,',
+          arti4: '鞋,靴,鞋子,靴子,脚,脚部',
+          arti5: '球,位面球',
+          arti6: '绳,线,链接绳,连接绳',
+          weapon: '武器,光锥'
+        }
     let keyTitleMap = {}
     lodash.forEach(keyMap, (val, key) => {
       lodash.forEach(val.split(','), (v) => {
@@ -173,6 +173,13 @@ const ProfileChange = {
         txt = txt.replace(consRet[0], '')
       }
 
+      // 行迹树匹配
+      let treeRet = /满行迹/.exec(txt)
+      if (!isGs && treeRet) {
+        char.trees = ['101', '102', '103', '201', '202', '203', '204', '205', '206', '207', '208', '209', '210']
+        txt = txt.replace(treeRet[0], '')
+      }
+
       // 天赋匹配
       let talentRet = (isGs
         ? /(?:天赋|技能|行迹)((?:[1][0-5]|[1-9])[ ,]?)((?:[1][0-5]|[1-9])[ ,]?)([1][0-5]|[1-9])/
@@ -264,7 +271,7 @@ const ProfileChange = {
       dataSource: 'change',
       _source: 'change',
       promote,
-      trees: lodash.extend([], source.trees)
+      trees: lodash.extend([], Data.def(dc.trees, source.trees))
     }, char.game)
 
     // 设置武器
