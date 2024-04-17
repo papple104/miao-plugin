@@ -328,7 +328,7 @@ const ProfileChange = {
 }
 
 let notReleasedName = {
-  gs: ['未竟的遐思', '谐律异想断章', '赤月之形'],
+  gs: ['赤月之形'],
   sr: []
 }
 
