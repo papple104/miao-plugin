@@ -11,6 +11,8 @@
 {{set {imgs, costumeSplash} = data }}
 {{set imgs = imgs || {} }}
 {{set gameHash = game === 'gs' ? '#':'*' }}
+{{set consTxt = game === 'gs' ? '命':'魂' }}
+{{set artiTxt = game === 'gs' ? '圣遗物':'遗器' }}
 
 {{block 'main'}}
 <div class="profile-cont game-{{game}}">
@@ -19,7 +21,7 @@
     <div class="detail">
       <div class="char-name">{{data.name}}</div>
       <div class="char-lv">UID {{uid}} - Lv.{{data.level}}
-        <span class="cons cons-{{data.cons}}">{{data.cons}}命</span></div>
+        <span class="cons cons-{{data.cons}}">{{data.cons}}{{consTxt}}</span></div>
       <div>
         {{if mode !== 'weapon'}}
         {{if game === 'gs'}}
@@ -180,8 +182,8 @@
     <div class="cont arti-mark-cont">
       <div class="arti-stat">
         <div class="arti-stat-ret">
-          <div><span>圣遗物总分</span><strong>{{ad.mark}}</strong></div>
-          <div><span>圣遗物评级</span><strong class="mark-{{ad.markClass}}">{{ad.markClass}}</strong></div>
+          <div><span>{{artiTxt}}总分</span><strong>{{ad.mark}}</strong></div>
+          <div><span>{{artiTxt}}评级</span><strong class="mark-{{ad.markClass}}">{{ad.markClass}}</strong></div>
         </div>
         <div class="arti-class-title">评分规则：{{ad.classTitle}}</div>
       </div>
@@ -204,7 +206,7 @@
           </ul>
         </div>
         <div class="dmg-desc arti-notice">
-          评分为<strong>喵喵版规则</strong>，仅供参考与娱乐。可使用<strong>{{gameHash}}{{data.abbr}}圣遗物</strong>来查看评分详情
+          评分为<strong>喵喵版规则</strong>，仅供参考与娱乐。可使用<strong>{{gameHash}}{{data.abbr}}{{artiTxt}}</strong>来查看评分详情
         </div>
       </div>
     </div>
@@ -278,7 +280,7 @@
       </div>
       <div class="cont-table">
         <div class="tr thead">
-          <div class="title dmg-idx">#</div>
+          <div class="title dmg-idx">{{gameHash}}</div>
           <div class="title dmg-title">伤害类型</div>
           <div>暴击伤害</div>
           <div>期望伤害</div>
@@ -352,10 +354,10 @@
       <div class="cont-footer dmg-desc">
         <ul>
           <li>
-            大数字的含义为圣遗物副词条置换后<strong>平均伤害</strong>的变化，下方的详情数字为<strong>平均伤害</strong>/<strong>暴击伤害</strong>。
+            大数字的含义为{{artiTxt}}副词条置换后<strong>平均伤害</strong>的变化，下方的详情数字为<strong>平均伤害</strong>/<strong>暴击伤害</strong>。
           </li>
           <li>关于<strong>平均伤害</strong>：是将暴击率计算在内的伤害期望，能反映综合的输出能力，不等于实际伤害数字。</li>
-          <li>可用于评估当前面板下圣遗物副词条的侧重方向。实际游戏情况更加复杂，结果供参考~</li>
+          <li>可用于评估当前面板下{{artiTxt}}副词条的侧重方向。实际游戏情况更加复杂，结果供参考~</li>
           <li>如需更换计算的伤害类型，可使用命令 <strong>{{gameHash}}{{data.abbr}}伤害+序号</strong>来切换，序号参见伤害计算板块</li>
         </ul>
       </div>
