@@ -328,7 +328,7 @@ const ProfileChange = {
 }
 
 let notReleasedName = {
-  gs: ['赤月之形'],
+  gs: [],
   sr: []
 }
 
