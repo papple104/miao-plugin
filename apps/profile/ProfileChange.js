@@ -328,8 +328,8 @@ const ProfileChange = {
 }
 
 let notReleasedName = {
-  gs: [],
-  sr: []
+  gs: ["赦罪", "白雨心弦", "筑云"],
+  sr: ["驶向第二次生命"]
 }
 
 export default ProfileChange
