@@ -129,7 +129,6 @@ let DmgCalc = {
       eleBase = isEle ? 1 + attr[ele] / 100 + DmgMastery.getMultiple(ele, calc(attr.mastery)) : 1
     }
 
-    let breakDotBase = 1
     let stanceNum = 1
     if (game === 'sr') {
       switch (ele) {
@@ -144,7 +143,8 @@ let DmgCalc = {
         case 'physicalBreak':
         case 'quantumBreak':
         case 'imaginaryBreak':
-        case 'iceBreak': {
+        case 'iceBreak':
+        case 'superBreak':{
           eleNum = DmgMastery.getBasePct(ele, attr.element)
           stanceNum = 1 + calc(attr.stance) / 100
           break
@@ -206,10 +206,13 @@ let DmgCalc = {
         break
       }
 
-      // 未计算层数(风化、纠缠)和韧性条系数(击破、纠缠)
+      // 未计算：1. 层数(风化、纠缠) 2. 韧性条系数(击破、纠缠) 3. 削韧值(超击破)、超击破伤害提高
       // 常规击破伤害均需要计算减伤区（即按韧性条存在处理） 特例：阮梅终结技/秘技击破伤害不计算减伤
       // 击破伤害 = 基础伤害 * 属性击破伤害系数 * (1+击破特攻%) * 易伤区 * 防御区 * 抗性区 * 减伤区 * (敌方韧性+2)/4 * 层数系数
       // 击破持续伤害 = 基础伤害 * 属性持续伤害系数 * (1+击破特攻%) * 易伤区 * 防御区 * 抗性区 * 减伤区 * 层数系数
+      // 超击破伤害 = 基础伤害 * (1+击破特攻%) * 易伤区 * 防御区 * 抗性区 * 减伤区 * (1+超击破伤害提高) * 技能最终削韧值
+      // 技能最终削韧值 = 技能基础削韧值 ×（1＋削韧值提高）×（1＋弱点击破效率提高）
+      // 超击破伤害提高 截至2.2版本该乘区仅能由同谐开拓者提供，与常规增伤区无关，暂时只在calc.js中手动计算
       case 'shock':
       case 'burn':
       case 'windShear':
@@ -221,10 +224,12 @@ let DmgCalc = {
       case 'physicalBreak':
       case 'quantumBreak':
       case 'imaginaryBreak':
-      case 'iceBreak': {
-        breakDotBase *= breakBaseDmg[level]
+      case 'iceBreak':
+      case 'superBreak': {
+        let breakBase = 1
+        breakBase *= breakBaseDmg[level]
         ret = {
-          avg: breakDotBase * eleNum * stanceNum * enemydmgNum * defNum * kNum * dmgReduceNum
+          avg: breakBase * eleNum * stanceNum * enemydmgNum * defNum * kNum * dmgReduceNum
         }
         break
       }
@@ -265,6 +270,30 @@ let DmgCalc = {
     }
 
     dmgFn.reaction = function (ele = false, talent = 'fy') {
+      switch (ele) {
+        // 击破持续伤害
+        case 'shock':
+        case 'burn':
+        case 'windShear':
+        case 'bleed': {
+          talent = 'dot'
+          break
+        }
+        // 击破伤害
+        case 'superBreak':
+        case 'lightningBreak':
+        case 'fireBreak':
+        case 'windBreak':
+        case 'physicalBreak':
+        case 'quantumBreak':
+        case 'imaginaryBreak':
+        case 'iceBreak': {
+          talent = 'break'
+          break
+        }
+        default:
+          break
+      }
       return dmgFn(0, talent, ele, 0, 'basic')
     }
 
