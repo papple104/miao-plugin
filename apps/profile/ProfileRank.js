@@ -76,7 +76,7 @@ export async function groupRank (e) {
       if (char) {
         uids = await ProfileRank.getGroupUidList(groupId, char ? char.id : '', mode)
       } else {
-        uids = await ProfileRank.getGroupMaxUidList(groupId, mode)
+        uids = await ProfileRank.getGroupMaxUidList(groupId, mode, game)
       }
       if (uids.length > 0) {
         return renderCharRankList({ e, uids, char, mode, groupId })
@@ -292,6 +292,7 @@ async function renderCharRankList ({ e, uids, char, mode, groupId }) {
     elem: char.elem,
     bodyClass: `char-${char.name}`,
     rankCfg,
-    mode
+    mode,
+    pageGotoParams: { waitUntil: 'networkidle2' }
   }, { e, scale: 1.4, retType: 'base64' }), new Button(e).profile(char)])
 }
