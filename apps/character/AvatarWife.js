@@ -156,7 +156,7 @@ const Wife = {
           if (char && (targetCfg.type === -1 || char.checkWifeType(targetCfg.type))) {
               return char.name
             } else if (targetCfg.type === 0 && char.checkWifeType(2)) {
-              msgDaughter = '\n不许炼铜！哼~设置成女儿还可以考虑...'
+              msgDaughter = `\n不许炼铜！哼~ （只能设置为女儿）`
             }
           })
           wifeList = lodash.filter(lodash.uniq(wifeList), (d) => !!d)
