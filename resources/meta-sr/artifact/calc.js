@@ -12,7 +12,7 @@ export default {
   },
   野穗伴行的快枪手: {
     2: attr('atkPct', 12),
-    4: [attr('speed', 6), {
+    4: [attr('speedPct', 6), {
       title: '普攻伤害提高10%',
       data: {
         aDmg: 10
@@ -268,6 +268,48 @@ export default {
       title: '存在一名与装备者命途相同的队友时，暴击率提高[cpct]%',
       data: {
         cpct: 12
+      }
+    }]
+  },
+  荡除蠹灾的铁骑: {
+    2: attr('stance', 16),
+    4: [{
+      check: ({ attr }) => attr.stance >= 150,
+      title: '造成的击破伤害无视敌方[breakIgnore]%防御',
+      data: {
+        breakIgnore: 10
+      }
+    }, {
+      check: ({ attr }) => attr.stance >= 250,
+      title: '造成的超击破伤害无视敌方[superBreakIgnore]%防御',
+      data: {
+        superBreakIgnore: 15
+      }
+    }]
+  },
+  风举云飞的勇烈: {
+    2: attr('atkPct', 12),
+    4: [attr('cpct', 6), {
+      title: '施放追加攻击使终结技伤害提高[qDmg]%',
+      data: {
+        qDmg: 36
+      }
+    }]
+  },
+  奔狼的都蓝王朝: {
+    2: {
+      title: '5层Buff使得装备者造成的追击伤害提高[tDmg]%，装备者的暴击伤害提高[cdmg]%',
+      data: {
+        tDmg: 25,
+        cdmg: 25
+      }
+    }
+  },
+  劫火莲灯铸炼宫: {
+    2: [attr('speedPct', 6), {
+      title: '击中火弱点的敌方时，击破特攻提高[stance]%',
+      data: {
+        stance: 40
       }
     }]
   }
