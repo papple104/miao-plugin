@@ -328,7 +328,7 @@ const ProfileChange = {
 }
 
 let notReleasedName = {
-  gs: ["白雨心弦"],
+  gs: [],
   sr: []
 }
 
