@@ -28,7 +28,7 @@ export const usefulAttr = {
   达达利亚: { hp: 0, atk: 75, def: 0, cpct: 100, cdmg: 100, mastery: 75, dmg: 100, phy: 0, recharge: 30, heal: 0 },
   魈: { hp: 0, atk: 75, def: 0, cpct: 100, cdmg: 100, mastery: 0, dmg: 100, phy: 0, recharge: 55, heal: 0 },
   宵宫: { hp: 0, atk: 75, def: 0, cpct: 100, cdmg: 100, mastery: 75, dmg: 100, phy: 0, recharge: 0, heal: 0 },
-  九条裟罗: { hp: 0, atk: 75, def: 0, cpct: 50, cdmg: 50, mastery: 0, dmg: 100, phy: 0, recharge: 100, heal: 0 },
+  九条裟罗: { hp: 0, atk: 75, def: 0, cpct: 100, cdmg: 100, mastery: 0, dmg: 100, phy: 0, recharge: 100, heal: 0 },
   琴: { hp: 0, atk: 85, def: 0, cpct: 50, cdmg: 50, mastery: 0, dmg: 80, phy: 100, recharge: 55, heal: 100 },
   菲谢尔: { hp: 0, atk: 75, def: 0, cpct: 100, cdmg: 100, mastery: 75, dmg: 100, phy: 60, recharge: 0, heal: 0 },
   罗莎莉亚: { hp: 0, atk: 75, def: 0, cpct: 100, cdmg: 100, mastery: 0, dmg: 70, phy: 80, recharge: 30, heal: 0 },
