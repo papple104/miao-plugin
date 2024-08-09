@@ -328,7 +328,7 @@ const ProfileChange = {
 }
 
 let notReleasedName = {
-  gs: ['柔灯挽歌'],
+  gs: [],
   sr: []
 }
 
