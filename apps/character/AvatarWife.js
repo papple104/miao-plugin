@@ -36,7 +36,7 @@ const relationMap = {
 }
 
 const relation = lodash.flatMap(relationMap, (d) => d.keyword)
-const wifeReg = `^#?\\s*(${relation.join('|')})\\s*(设置|选择|指定|列表|查询|列表|是|是谁|照片|相片|图片|写真|图像)?\\s*([^\\d]*)\\s*(\\d*)$`
+const wifeReg = `^#?\\s*(${relation.join('|')})\\s*(设置|选择|指定|添加|列表|查询|列表|是|是谁|照片|相片|图片|写真|图像)?\\s*([^\\d]*)\\s*(\\d*)$`
 
 async function getAvatarList (player, type) {
   await player.refreshMysDetail()
@@ -82,7 +82,7 @@ const Wife = {
     let action = msgRet[2] || '卡片'
     let actionParam = msgRet[3] || ''
 
-    if (!'设置,选择,挑选,指定'.split(',').includes(action) && actionParam) {
+    if (!'设置,选择,挑选,指定,添加'.split(',').includes(action) && actionParam) {
       return false
     }
 
@@ -140,9 +140,14 @@ const Wife = {
       case '选择':
       case '挑选':
       case '指定':
+      case '添加':
         if (!isSelf) {
           e.reply('只能指定自己的哦~')
           return true
+        }
+        let existingWife = []
+        if (action === '添加') {
+          existingWife = await selfUser.getCfg(`wife.${targetCfg.key}`, [])
         }
         // 选择老婆
         actionParam = actionParam.replace(/(，|、|;|；)/g, ',')
@@ -159,6 +164,7 @@ const Wife = {
               msgDaughter = `\n不许炼铜！哼~ （只能设置为女儿）`
             }
           })
+          wifeList = wifeList.concat(existingWife)
           wifeList = lodash.filter(lodash.uniq(wifeList), (d) => !!d)
           addRet = wifeList
           if (addRet.length === 0) {
