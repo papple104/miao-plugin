@@ -73,8 +73,7 @@ let ProfileDetail = {
       name = name.replace(/详情|详细|面板|更新/g, '').trim()
     } else if (/圣遗物|遗器/.test(msg)) {
       mode = 'artis'
-      name = name.replace('圣遗物', '').trim()
-      name = name.replace('遗器', '').trim()
+      name = name.replace(/圣遗物|遗器/, '').trim()
     }
     if (!Common.cfg('avatarProfile')) {
       return false // 面板开关关闭
