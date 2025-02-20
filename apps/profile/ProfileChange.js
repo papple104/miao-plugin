@@ -335,7 +335,7 @@ const ProfileChange = {
 }
 
 let notReleasedName = {
-  gs: [],
+  gs: ['长夜之誓', '深廊终曲'],
   sr: []
 }
 
