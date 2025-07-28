@@ -297,7 +297,7 @@ let ProfileDetail = {
         dmgData.push(ds)
       })
       lodash.forEach(dmgCalc.msg, (msg) => {
-        msg.replace(':', '：')
+        msg = msg.replace(':', '：')
         dmgMsg.push(msg.split('：'))
       })
 
