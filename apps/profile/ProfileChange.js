@@ -144,10 +144,6 @@ const ProfileChange = {
         }
         let weapon = Weapon.get(weaponName, game, ret.char.game)
         if (weapon || weaponName === '武器' || Weapon.isWeaponSet(weaponName)) {
-          console.log("weapon?.name", weapon?.name)
-          console.log("weapon?.game", weapon?.game)
-          console.log("Cfg.get('notReleasedData') === false", Cfg.get('notReleasedData') === false)
-          console.log("weapon?.isRelease === false", weapon?.isRelease === false)
           if (Cfg.get('notReleasedData') === false && !weapon?.isRelease) {
             return true
           }
