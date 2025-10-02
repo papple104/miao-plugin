@@ -61,7 +61,7 @@ class Character extends Base {
     if (this.eta) {
       return this.eta * 1 < new Date() * 1
     }
-    if (CharReleased[this.game]) {
+    if (CharReleased[this.game] && this.name) {
       return CharReleased[this.game].includes[this.name]
     }
     return false

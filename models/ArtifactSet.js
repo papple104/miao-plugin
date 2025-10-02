@@ -25,7 +25,7 @@ class ArtifactSet extends Base {
   }
 
   get isRelease () {
-    if (ArtifactReleased[this.game]) {
+    if (ArtifactReleased[this.game] && this.name) {
       return ArtifactReleased[this.game].includes(this.name)
     }
     return false

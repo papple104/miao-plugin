@@ -25,7 +25,7 @@ class Weapon extends Base {
   }
 
   get isRelease () {
-    if (WeaponReleased[this.game]) {
+    if (WeaponReleased[this.game] && this.name) {
       return WeaponReleased[this.game].includes(this.name)
     }
     return false
@@ -94,10 +94,6 @@ class Weapon extends Base {
     }
     let data = this.detail?.affixData?.datas || {}
     return (data['0'] && data['0'][4]) ? 5 : 1
-  }
-
-  get isRelease () {
-    return true
   }
 
   static isWeaponSet (name) {

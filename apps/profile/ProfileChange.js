@@ -108,7 +108,7 @@ const ProfileChange = {
         let set = ArtifactSet.get(asRet[idx])
         let ret = false
         if (set) {
-          if (Cfg.get('notReleasedData') === true || set.isRelease()) {
+          if (Cfg.get('notReleasedData') === true || set.isRelease) {
             ret = set.name
           }
         }
@@ -143,12 +143,14 @@ const ProfileChange = {
           weaponName = `${char.name}专武`
         }
         let weapon = Weapon.get(weaponName, game, ret.char.game)
-        if (weapon) {
-          if (Cfg.get('notReleasedData') === false && !weapon.isRelease()) {
-            weapon = false
-          }
-        }
         if (weapon || weaponName === '武器' || Weapon.isWeaponSet(weaponName)) {
+          console.log("weapon?.name", weapon?.name)
+          console.log("weapon?.game", weapon?.game)
+          console.log("Cfg.get('notReleasedData') === false", Cfg.get('notReleasedData') === false)
+          console.log("weapon?.isRelease === false", weapon?.isRelease === false)
+          if (Cfg.get('notReleasedData') === false && !weapon?.isRelease) {
+            return true
+          }
           let affix = wRet[2] || wRet[5]
           affix = { 一: 1, 二: 2, 三: 3, 四: 4, 五: 5, 满: 5 }[affix] || affix * 1
           let tmp = {
