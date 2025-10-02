@@ -1,5 +1,6 @@
 import Base from './Base.js'
 import { Data, Format, Meta } from '#miao'
+import { WeaponReleased } from '../config/released.js'
 import lodash from 'lodash'
 
 let weaponSet
@@ -21,6 +22,13 @@ class Weapon extends Base {
     this.star = meta.star
     this.game = game
     return this._cache()
+  }
+
+  get isRelease () {
+    if (WeaponReleased[this.game]) {
+      return WeaponReleased[this.game].includes(this.name)
+    }
+    return false
   }
 
   get title () {

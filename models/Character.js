@@ -12,6 +12,7 @@ import CharTalent from './character/CharTalent.js'
 import CharId from './character/CharId.js'
 import CharMeta from './character/CharMeta.js'
 import CharCfg from './character/CharCfg.js'
+import { CharReleased } from '../config/released.js'
 
 let metaKey = 'abbr,star,elem,weapon,talentId,talentCons,eta'.split(',')
 const detailKey = 'title,allegiance,birth,astro,desc,cncv,jpcv,costume,baseAttr,growAttr,materials,talent,talentData,cons,passive,attr,sp'.split(',')
@@ -59,6 +60,9 @@ class Character extends Base {
     }
     if (this.eta) {
       return this.eta * 1 < new Date() * 1
+    }
+    if (CharReleased[this.game]) {
+      return CharReleased[this.game].includes[this.name]
     }
     return false
   }

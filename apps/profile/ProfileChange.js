@@ -106,24 +106,15 @@ const ProfileChange = {
       let asRet = asReg.exec(txt)
       let getSet = (idx) => {
         let set = ArtifactSet.get(asRet[idx])
-        return set ? set.name : false
-      }
-      if (asRet && asRet[1] && getSet(1)) {
-        if (Cfg.get('notReleasedData') === false) {
-          let notReleased = false
-          for (let idx = 1; idx <= 3; idx++) {
-            let as = ArtifactSet.get(asRet[idx], game)
-            if (!as) {
-              continue
-            }
-            if (lodash.includes(notReleasedName[game], as.name)) {
-              notReleased = true
-            }
-          }
-          if (notReleased) {
-            return true
+        let ret = false
+        if (set) {
+          if (Cfg.get('notReleasedData') === true || set.isRelease()) {
+            ret = set.name
           }
         }
+        return ret
+      }
+      if (asRet && asRet[1] && getSet(1)) {
         if (game === 'gs') {
           change.artisSet = [getSet(1), getSet(2) || getSet(1)]
         } else if (game === 'sr') {
@@ -152,8 +143,10 @@ const ProfileChange = {
           weaponName = `${char.name}专武`
         }
         let weapon = Weapon.get(weaponName, game, ret.char.game)
-        if (weapon && (Cfg.get('notReleasedData') === false && lodash.includes(notReleasedName[game], weapon.name))) {
-          return true
+        if (weapon) {
+          if (Cfg.get('notReleasedData') === false && !weapon.isRelease()) {
+            weapon = false
+          }
         }
         if (weapon || weaponName === '武器' || Weapon.isWeaponSet(weaponName)) {
           let affix = wRet[2] || wRet[5]
@@ -332,11 +325,6 @@ const ProfileChange = {
     ret.calcAttr()
     return ret
   }
-}
-
-let notReleasedName = {
-  gs: ['冷寂迸音'],
-  sr: []
 }
 
 export default ProfileChange

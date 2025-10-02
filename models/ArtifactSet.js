@@ -6,6 +6,7 @@ import Base from './Base.js'
 import { Meta } from '#miao'
 
 import { Artifact } from './index.js'
+import { ArtifactReleased } from '../config/released.js'
 
 class ArtifactSet extends Base {
   constructor (data, game = 'gs') {
@@ -21,6 +22,13 @@ class ArtifactSet extends Base {
     this.game = game
     this.meta = data
     return this._cache()
+  }
+
+  get isRelease () {
+    if (ArtifactReleased[this.game]) {
+      return ArtifactReleased[this.game].includes(this.name)
+    }
+    return false
   }
 
   get img () {
